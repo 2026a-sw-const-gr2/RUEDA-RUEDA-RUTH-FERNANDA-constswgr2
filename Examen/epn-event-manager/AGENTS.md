@@ -7,8 +7,9 @@
 - Trabajar con la estructura actual del proyecto NestJS.
 - No crear carpeta backend, porque este proyecto ya es el backend.
 - El CRUD de platos típicos ecuatorianos debe crearse dentro de src/modules/platos-tipicos.
-- El CRUD debe usar persistencia en SQLite, no arreglos en memoria.
-- La base de datos debe guardarse en db/.
+- El CRUD debe usar persistencia en SQLite, no arreglos en memoria como almacenamiento principal.
+- La base de datos de platos tipicos debe guardarse en `db/platos-tipicos.sqlite`.
+- Los platos tipicos deben mantenerse despues de reiniciar el backend.
 - No subir node_modules.
 - No subir .env.
 - Sí subir .env.example.

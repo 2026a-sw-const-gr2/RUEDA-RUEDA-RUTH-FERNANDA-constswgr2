@@ -46,21 +46,26 @@ npm run test:debug
 - Las pruebas e2e usan `test/jest-e2e.json`.
 - Actualmente existe `src/app.controller.spec.ts`.
 - Actualmente existe `test/app.e2e-spec.ts`.
-- Todavia no existen pruebas para `PlatoTipico`.
+- Actualmente existe `test/platos-tipicos.e2e-spec.ts`.
+- El CRUD inicial de `PlatoTipico` usa TypeORM con SQLite en `db/platos-tipicos.sqlite`.
+- La prueba e2e de platos tipicos valida persistencia despues de reiniciar la aplicacion Nest.
 
 ## Pruebas esperadas del CRUD inicial
 
-Cuando se cree el CRUD inicial persistente, se esperan pruebas para:
+El CRUD inicial persistente ya incluye una prueba e2e para:
 
 - Crear plato tipico.
 - Listar platos tipicos.
+- Verificar persistencia SQLite despues de reiniciar.
+
+Pruebas pendientes para ampliar cobertura del CRUD inicial:
+
 - Consultar plato tipico existente.
 - Consultar plato tipico inexistente.
 - Actualizar plato tipico existente.
 - Actualizar plato tipico inexistente.
 - Eliminar plato tipico existente.
 - Eliminar plato tipico inexistente.
-- Verificar persistencia SQLite despues de reiniciar.
 
 ## Pruebas de validaciones
 

@@ -8,9 +8,11 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 1 completada: se reviso la estructura real del proyecto.
+Fase 2 completada: se creo el CRUD inicial persistente de platos tipicos ecuatorianos.
 
-Todavia no existe el CRUD inicial de platos tipicos ecuatorianos. No existe frontend y no existe GitHub Actions en esta fase.
+El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
+
+No existe frontend, API Key, Swagger, endpoint de estadisticas ni GitHub Actions en esta fase.
 
 ## Recurso principal
 
@@ -38,7 +40,8 @@ Los timestamps ISO 8601 se usaran solo en logs, metadata adaptativa o auditoria 
 ```text
 epn-event-manager/
 ├── db/
-│   └── events.sqlite
+│   ├── events.sqlite
+│   └── platos-tipicos.sqlite
 ├── src/
 │   ├── database/
 │   │   ├── database.module.ts
@@ -46,6 +49,7 @@ epn-event-manager/
 │   ├── modules/
 │   │   ├── events/
 │   │   ├── health/
+│   │   ├── platos-tipicos/
 │   │   └── stats/
 │   ├── app.controller.ts
 │   ├── app.controller.spec.ts
@@ -54,6 +58,7 @@ epn-event-manager/
 │   └── main.ts
 ├── test/
 │   ├── app.e2e-spec.ts
+│   ├── platos-tipicos.e2e-spec.ts
 │   └── jest-e2e.json
 ├── AGENTS.md
 ├── CONTEXTO_PROYECTO.md
@@ -66,17 +71,17 @@ epn-event-manager/
 ## Hallazgos tecnicos
 
 - El proyecto ya usa estructura `src/modules`.
-- `AppModule` importa `DatabaseModule`, `EventsModule`, `HealthModule` y `StatsModule`.
+- `AppModule` importa `DatabaseModule`, `EventsModule`, `HealthModule`, `StatsModule` y `PlatosTipicosModule`.
 - `DatabaseModule` configura TypeORM con `better-sqlite3`.
-- La base actual configurada es `db/events.sqlite`.
+- La base actual configurada para TypeORM es `db/platos-tipicos.sqlite`.
 - Existe carpeta `db` para persistencia.
 - Existen pruebas Jest unitarias en `src` y e2e en `test`.
-- No existe todavia `src/modules/platos-tipicos`.
+- Existe `src/modules/platos-tipicos` con controller, service y DTOs.
 - No existe configuracion de frontend ni GitHub Actions en esta fase.
 
 ## Ubicacion del CRUD inicial
 
-El CRUD inicial de platos tipicos ecuatorianos se creara en:
+El CRUD inicial de platos tipicos ecuatorianos esta creado en:
 
 ```text
 src/modules/platos-tipicos
@@ -84,9 +89,9 @@ src/modules/platos-tipicos
 
 Se usa esta ubicacion porque el proyecto ya organiza los modulos dentro de `src/modules` y `AGENTS.md` define esa ruta para el CRUD.
 
-La persistencia debera usar SQLite dentro de `db/`, aprovechando la configuracion TypeORM existente.
+La persistencia usa SQLite dentro de `db/platos-tipicos.sqlite`, aprovechando la configuracion TypeORM existente.
 
-## Endpoints esperados
+## Endpoints iniciales
 
 | Metodo | Endpoint | Descripcion |
 | --- | --- | --- |
@@ -96,7 +101,38 @@ La persistencia debera usar SQLite dentro de `db/`, aprovechando la configuracio
 | `PATCH` | `/platos-tipicos/:id` | Actualizar un plato tipico |
 | `DELETE` | `/platos-tipicos/:id` | Eliminar un plato tipico |
 
-Estos endpoints aun no estan implementados.
+Ejemplo de creacion:
+
+```bash
+curl -X POST http://localhost:3000/platos-tipicos \
+  -H "Content-Type: application/json" \
+  -d "{\"nombre\":\"Encebollado\",\"descripcion\":\"Plato tradicional de la Costa ecuatoriana.\",\"region\":\"Costa\",\"ingredientes\":\"Pescado, yuca, cebolla, tomate y limon\",\"precio\":3.5,\"imagenUrl\":\"https://example.com/encebollado.jpg\",\"categoria\":\"Sopa tradicional\"}"
+```
+
+Listar platos:
+
+```bash
+curl http://localhost:3000/platos-tipicos
+```
+
+## Como probar persistencia
+
+1. Ejecutar el backend:
+
+```bash
+npm run start:dev
+```
+
+2. Crear un plato con `POST /platos-tipicos`.
+3. Detener el servidor.
+4. Volver a ejecutar el backend con `npm run start:dev`.
+5. Consultar:
+
+```bash
+curl http://localhost:3000/platos-tipicos
+```
+
+El plato creado debe seguir apareciendo porque se guarda en `db/platos-tipicos.sqlite`.
 
 ## Comandos reales
 
@@ -182,7 +218,7 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | --- | --- | --- |
 | Fase 0 | Documentacion base y contexto real | Completada |
 | Fase 1 | Revision de estructura real | Completada |
-| Fase 2 | Crear CRUD inicial persistente | Pendiente |
+| Fase 2 | Crear CRUD inicial persistente | Completada |
 | Fase 3 | Probar CRUD inicial y persistencia | Pendiente |
 | Fase 4 | Diagnostico de deuda tecnica | Pendiente |
 | Fase 5 | Mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
