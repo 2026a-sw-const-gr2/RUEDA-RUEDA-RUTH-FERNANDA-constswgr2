@@ -155,3 +155,34 @@ El cambio adapta la API para integracion con EPN Event Manager sin modificar el 
 ### Impacto
 
 El CRUD queda listo para integraciones que necesitan contexto operativo estandarizado. Las pruebas quedaron en GREEN y el build compila correctamente.
+
+## Actualizacion Fase 8: mantenimiento perfectivo
+
+### Antes
+
+El CRUD no tenia endpoint de estadisticas. Para conocer totales, precios o agrupaciones era necesario consultar todos los platos y calcular fuera de la API.
+
+### Prueba perfectiva
+
+Se agrego una prueba e2e para `GET /platos-tipicos/stats` que confirma:
+
+- `totalPlatos`.
+- `precioPromedio`.
+- `precioMinimo`.
+- `precioMaximo`.
+- `platosPorRegion`.
+- `platosPorCategoria`.
+- `generatedAt` en formato ISO 8601.
+- Ausencia de `platosDisponibles` y `platosNoDisponibles`.
+
+### Despues
+
+El endpoint `GET /platos-tipicos/stats` devuelve estadisticas calculadas desde SQLite y mantiene la estructura adaptativa `{ data, metadata }`.
+
+### Justificacion
+
+Este cambio es perfectivo porque agrega una capacidad de analisis sin corregir un error critico.
+
+### Impacto
+
+La API ofrece informacion agregada del CRUD y las pruebas quedaron en GREEN con 12 pruebas e2e pasando.

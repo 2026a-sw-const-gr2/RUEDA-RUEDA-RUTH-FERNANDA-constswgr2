@@ -151,13 +151,24 @@ Resultado documentado:
 
 ## Pruebas de mantenimiento perfectivo
 
-- Endpoint de estadisticas devuelve total de platos.
-- Calcula precio promedio.
-- Calcula precio minimo.
-- Calcula precio maximo.
-- Agrupa platos por region.
-- Agrupa platos por categoria.
-- Endpoint de estadisticas responde correctamente cuando no hay platos.
+- [x] Endpoint de estadisticas devuelve total de platos.
+- [x] Calcula precio promedio.
+- [x] Calcula precio minimo.
+- [x] Calcula precio maximo.
+- [x] Agrupa platos por region.
+- [x] Agrupa platos por categoria.
+- [x] Incluye `generatedAt` en formato ISO 8601.
+- [x] No calcula `platosDisponibles`.
+- [x] No calcula `platosNoDisponibles`.
+
+Estado TDD Fase 8: RED -> GREEN.
+
+Resultado documentado:
+
+- RED: `npm run test:e2e` fallo porque `GET /platos-tipicos/stats` aun no existia y caia en `:id`.
+- GREEN: `npm run test:e2e` paso con 2 suites y 12 pruebas.
+- `npm test`: 1 suite paso, 1 prueba paso.
+- `npm run build`: paso correctamente.
 
 ## Pruebas de mantenimiento preventivo
 

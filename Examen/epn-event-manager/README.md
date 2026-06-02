@@ -8,11 +8,11 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 7 completada: se aplico mantenimiento adaptativo para integrar el CRUD con el hub de eventos EPN Event Manager mediante metadata estandarizada.
+Fase 8 completada: se aplico mantenimiento perfectivo agregando el endpoint de estadisticas `GET /platos-tipicos/stats`.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
-No existe frontend, API Key, Swagger, endpoint de estadisticas ni GitHub Actions en esta fase.
+No existe frontend, API Key, Swagger ni GitHub Actions en esta fase.
 
 ## Recurso principal
 
@@ -121,6 +121,7 @@ La persistencia usa SQLite dentro de `db/platos-tipicos.sqlite`, aprovechando la
 | `GET` | `/platos-tipicos/:id` | Consultar un plato tipico por ID |
 | `PATCH` | `/platos-tipicos/:id` | Actualizar un plato tipico |
 | `DELETE` | `/platos-tipicos/:id` | Eliminar un plato tipico |
+| `GET` | `/platos-tipicos/stats` | Consultar estadisticas del CRUD |
 
 Ejemplo de creacion:
 
@@ -201,6 +202,47 @@ Eliminar:
 curl -X DELETE http://localhost:3000/platos-tipicos/1
 ```
 
+## Endpoint de estadisticas
+
+El mantenimiento perfectivo de Fase 8 agrega:
+
+```bash
+curl http://localhost:3000/platos-tipicos/stats
+```
+
+Respuesta esperada:
+
+```json
+{
+  "data": {
+    "totalPlatos": 2,
+    "precioPromedio": 4.625,
+    "precioMinimo": 3.5,
+    "precioMaximo": 5.75,
+    "platosPorRegion": {
+      "Costa": 1,
+      "Sierra": 1
+    },
+    "platosPorCategoria": {
+      "Sopa tradicional": 1,
+      "Sopa andina": 1
+    },
+    "generatedAt": "2026-06-02T01:45:00.000Z"
+  },
+  "metadata": {
+    "source": "platos-tipicos-crud",
+    "system": "Sistema de Platos Típicos Ecuatorianos",
+    "apiVersion": "v1",
+    "timestampISO": "2026-06-02T01:45:00.000Z",
+    "timezone": "America/Guayaquil",
+    "environment": "development",
+    "integrationTarget": "EPN Event Manager"
+  }
+}
+```
+
+No se calculan `platosDisponibles` ni `platosNoDisponibles`, porque `PlatoTipico` no tiene campo `disponible`.
+
 ## Como probar persistencia
 
 1. Ejecutar el backend:
@@ -266,11 +308,11 @@ Pruebas e2e:
 npm run test:e2e
 ```
 
-Resultado Fase 7:
+Resultado Fase 8:
 
 ```text
 Test Suites: 2 passed, 2 total
-Tests: 11 passed, 11 total
+Tests: 12 passed, 12 total
 Estado TDD: GREEN
 ```
 
@@ -320,7 +362,7 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 5 | Crear pruebas TDD base del CRUD inicial | Completada |
 | Fase 6 | Mantenimiento correctivo | Completada |
 | Fase 7 | Mantenimiento adaptativo | Completada |
-| Fase 8 | Mantenimiento perfectivo | Pendiente |
+| Fase 8 | Mantenimiento perfectivo | Completada |
 | Fase 9 | Mantenimiento preventivo | Pendiente |
 | Fase 10 | Logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
 

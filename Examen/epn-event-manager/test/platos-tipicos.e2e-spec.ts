@@ -129,6 +129,60 @@ describe('PlatosTipicosController (e2e)', () => {
       .expect(404);
   });
 
+  it('devuelve estadisticas de platos tipicos', async () => {
+    await createPlato(`Encebollado Stats Costa ${Date.now()}`);
+
+    const segundoPlato = await supertest(
+      app.getHttpServer() as Parameters<typeof supertest>[0],
+    )
+      .post('/platos-tipicos')
+      .send({
+        ...platoPayload(`Locro Stats Sierra ${Date.now()}`),
+        region: 'Sierra',
+        categoria: 'Sopa andina',
+        precio: 5.75,
+      })
+      .expect(201);
+    createdIds.push(segundoPlato.body.data.id);
+
+    const listResponse = await supertest(
+      app.getHttpServer() as Parameters<typeof supertest>[0],
+    )
+      .get('/platos-tipicos')
+      .expect(200);
+    const platos = listResponse.body.data as Array<{
+      precio: number;
+      region: string;
+      categoria: string;
+    }>;
+    const precios = platos.map((plato) => Number(plato.precio));
+    const totalPrecio = precios.reduce((total, precio) => total + precio, 0);
+    const countBy = (field: 'region' | 'categoria') =>
+      platos.reduce<Record<string, number>>((acc, plato) => {
+        acc[plato[field]] = (acc[plato[field]] ?? 0) + 1;
+        return acc;
+      }, {});
+
+    const statsResponse = await supertest(
+      app.getHttpServer() as Parameters<typeof supertest>[0],
+    )
+      .get('/platos-tipicos/stats')
+      .expect(200);
+
+    expect(statsResponse.body.data).toMatchObject({
+      totalPlatos: platos.length,
+      precioPromedio: totalPrecio / platos.length,
+      precioMinimo: Math.min(...precios),
+      precioMaximo: Math.max(...precios),
+      platosPorRegion: countBy('region'),
+      platosPorCategoria: countBy('categoria'),
+    });
+    expect(statsResponse.body.data.generatedAt).toMatch(isoRegex);
+    expect(statsResponse.body.data).not.toHaveProperty('platosDisponibles');
+    expect(statsResponse.body.data).not.toHaveProperty('platosNoDisponibles');
+    expectMetadata(statsResponse.body);
+  });
+
   it('actualiza un plato tipico existente', async () => {
     const nombre = `Encebollado Actualizar ${Date.now()}`;
     const createResponse = await createPlato(nombre);

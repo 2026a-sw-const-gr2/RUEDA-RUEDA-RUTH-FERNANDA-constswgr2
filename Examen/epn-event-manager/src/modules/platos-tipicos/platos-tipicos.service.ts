@@ -8,6 +8,16 @@ import { UpdatePlatoTipicoDto } from './dto/update-plato-tipico.dto';
 
 type PlatoTipicoAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'QUERY';
 
+export interface PlatosTipicosStats {
+  totalPlatos: number;
+  precioPromedio: number;
+  precioMinimo: number;
+  precioMaximo: number;
+  platosPorRegion: Record<string, number>;
+  platosPorCategoria: Record<string, number>;
+  generatedAt: string;
+}
+
 export interface Metadata {
   source: 'platos-tipicos-crud';
   system: 'Sistema de Platos Típicos Ecuatorianos';
@@ -51,6 +61,24 @@ export class PlatosTipicosService {
   async findOne(id: number): Promise<ResponseWithMetadata<PlatoTipicoEntity>> {
     const plato = await this.findEntityById(id);
     return this.withMetadata(plato, 'QUERY', id);
+  }
+
+  async getStats(): Promise<ResponseWithMetadata<PlatosTipicosStats>> {
+    const platos = await this.platosRepo.find();
+    const precios = platos.map((plato) => Number(plato.precio));
+    const totalPrecio = precios.reduce((total, precio) => total + precio, 0);
+    const totalPlatos = platos.length;
+    const stats: PlatosTipicosStats = {
+      totalPlatos,
+      precioPromedio: totalPlatos === 0 ? 0 : totalPrecio / totalPlatos,
+      precioMinimo: totalPlatos === 0 ? 0 : Math.min(...precios),
+      precioMaximo: totalPlatos === 0 ? 0 : Math.max(...precios),
+      platosPorRegion: this.countBy(platos, 'region'),
+      platosPorCategoria: this.countBy(platos, 'categoria'),
+      generatedAt: new Date().toISOString(),
+    };
+
+    return this.withMetadata(stats, 'QUERY');
   }
 
   private async findEntityById(id: number): Promise<PlatoTipicoEntity> {
@@ -123,6 +151,16 @@ export class PlatosTipicosService {
     if (Number.isNaN(numericPrice) || numericPrice < 0) {
       throw new BadRequestException('El precio debe ser un numero mayor o igual a 0');
     }
+  }
+
+  private countBy(
+    platos: PlatoTipicoEntity[],
+    field: 'region' | 'categoria',
+  ): Record<string, number> {
+    return platos.reduce<Record<string, number>>((acc, plato) => {
+      acc[plato[field]] = (acc[plato[field]] ?? 0) + 1;
+      return acc;
+    }, {});
   }
 
   private createMetadata(): Metadata {

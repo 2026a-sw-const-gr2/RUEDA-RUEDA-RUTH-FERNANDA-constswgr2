@@ -222,6 +222,32 @@ Impacto:
 - Las pruebas validan metadata en CREATE, UPDATE, DELETE y QUERY.
 - Estado TDD Fase 7: RED confirmado al fallar por ausencia de metadata; GREEN confirmado despues de implementar.
 
+## Mantenimiento perfectivo Fase 8
+
+En Fase 8 se agrego una mejora funcional al CRUD: `GET /platos-tipicos/stats`.
+
+Antes:
+
+- No existia un endpoint para analizar los platos registrados.
+- La informacion de total, precios y agrupaciones debia calcularse fuera de la API.
+
+Despues:
+
+- `GET /platos-tipicos/stats` devuelve `totalPlatos`, `precioPromedio`, `precioMinimo`, `precioMaximo`, `platosPorRegion`, `platosPorCategoria` y `generatedAt`.
+- `generatedAt` usa formato ISO 8601.
+- La respuesta conserva el wrapper adaptativo `{ data, metadata }`.
+- No se calculan `platosDisponibles` ni `platosNoDisponibles`, porque `PlatoTipico` no tiene campo `disponible`.
+
+Justificacion:
+
+- Es mantenimiento perfectivo porque agrega una capacidad de analisis sin corregir un error critico.
+
+Impacto:
+
+- El CRUD ofrece informacion agregada util para reportes y consultas.
+- Las pruebas validan que el endpoint calcula estadisticas desde SQLite.
+- Estado TDD Fase 8: RED confirmado por ausencia del endpoint; GREEN confirmado despues de implementar.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -290,6 +316,6 @@ npm run format
 | Fase 5 | Crear pruebas TDD base del CRUD inicial | Completada |
 | Fase 6 | Aplicar mantenimiento correctivo | Completada |
 | Fase 7 | Aplicar mantenimiento adaptativo | Completada |
-| Fase 8 | Aplicar mantenimiento perfectivo | Pendiente |
+| Fase 8 | Aplicar mantenimiento perfectivo | Completada |
 | Fase 9 | Aplicar mantenimiento preventivo | Pendiente |
 | Fase 10 | Agregar logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |

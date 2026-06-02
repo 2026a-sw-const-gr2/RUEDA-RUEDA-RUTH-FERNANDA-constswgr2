@@ -26,6 +26,11 @@ export class PlatosTipicosController {
     return this.platosTipicosService.findAll();
   }
 
+  @Get('stats')
+  getStats() {
+    return this.platosTipicosService.getStats();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.platosTipicosService.findOne(this.parseId(id));

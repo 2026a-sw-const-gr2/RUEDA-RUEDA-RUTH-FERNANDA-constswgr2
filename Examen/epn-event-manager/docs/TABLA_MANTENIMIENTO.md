@@ -23,6 +23,12 @@ Clasificacion inicial de deuda tecnica detectada en el CRUD persistente de plato
 | --- | --- | --- | --- |
 | Las respuestas del CRUD devolvian datos directos sin metadata y no habia integracion desde platos tipicos hacia el modulo `events`. | Las respuestas devuelven `{ data, metadata }`, la metadata usa `timestampISO`, `timezone`, `apiVersion`, `environment` e `integrationTarget`, y `PlatosTipicosService` registra eventos internos con `EventsService`. | El CRUD debe integrarse con EPN Event Manager sin cambiar los campos oficiales de `PlatoTipico`. La metadata se mantiene separada del modelo principal. | API mas adaptable para integraciones, respuestas con contexto uniforme y pruebas automatizadas de metadata. |
 
+## Mantenimiento perfectivo aplicado en Fase 8
+
+| Antes | Despues | Justificacion | Impacto |
+| --- | --- | --- | --- |
+| No existia endpoint para obtener estadisticas del CRUD de platos tipicos. | Se agrego `GET /platos-tipicos/stats` con `totalPlatos`, `precioPromedio`, `precioMinimo`, `precioMaximo`, `platosPorRegion`, `platosPorCategoria` y `generatedAt`. | Es perfectivo porque agrega una nueva capacidad de analisis sin corregir un error critico. No calcula disponibilidad porque `PlatoTipico` no tiene campo `disponible`. | Mayor valor funcional para consultas, reportes y revision del estado del CRUD. |
+
 ## Orden sugerido
 
 1. Ampliar pruebas del CRUD y errores.
