@@ -54,7 +54,7 @@ Los timestamps ISO 8601 se usaran solo en logs, metadata adaptativa o auditoria 
 
 ## Frontend
 
-El frontend será creado con Node.js usando Vite y JavaScript.
+El frontend fue creado con Node.js usando Vite y JavaScript.
 
 Ubicación:
 
@@ -72,6 +72,7 @@ Crear un hub visual para platos típicos ecuatorianos que permita:
 - eliminar
 - visualizar estadísticas
 - consumir la API protegida con X-FIS-EPN-KEY
+- manejar errores cuando el backend no responde
 
 ## Estructura real revisada en Fase 1
 
@@ -85,6 +86,10 @@ Crear un hub visual para platos típicos ecuatorianos que permita:
 - `src/modules/health`: modulo actual de salud.
 - `src/modules/stats`: modulo actual de estadisticas de eventos.
 - `src/modules/platos-tipicos`: modulo CRUD inicial de platos tipicos ecuatorianos.
+- `frontend`: interfaz web con Vite y JavaScript simple.
+- `frontend/src/api.js`: cliente HTTP que envia `X-FIS-EPN-KEY`.
+- `frontend/src/main.js`: renderizado de tarjetas, formulario, detalle y estadisticas.
+- `frontend/src/styles.css`: estilos de la interfaz.
 - `test`: contiene prueba e2e base `app.e2e-spec.ts`, prueba de persistencia `platos-tipicos.e2e-spec.ts` y configuracion `jest-e2e.json`.
 - `db`: contiene `events.sqlite` y `platos-tipicos.sqlite`.
 - `README.md`: documentacion principal.
@@ -393,6 +398,36 @@ Impacto:
 - Las pruebas del backend se mantienen en GREEN con 24 pruebas e2e.
 - Estado TDD Fase 12: GREEN.
 
+## Frontend con Node.js Fase 13
+
+En Fase 13 se creo una interfaz web para demostrar el CRUD de platos tipicos ecuatorianos.
+
+Antes:
+
+- No existia frontend.
+- El CRUD solo se podia probar con curl, Swagger o pruebas automatizadas.
+
+Despues:
+
+- Se creo `frontend/` con Vite y JavaScript simple.
+- Se creo `frontend/package.json` con scripts `dev`, `build` y `preview`.
+- Se creo `frontend/src/api.js` para consumir el backend y enviar `X-FIS-EPN-KEY`.
+- Se creo una interfaz con formulario de creacion/edicion, tarjetas, detalle, eliminacion y estadisticas.
+- Se habilito CORS en `src/main.ts` para permitir consumo desde Vite.
+- Se documenta validacion manual en `PLAN_TDD.md`.
+
+Justificacion:
+
+- El cambio agrega un hub visual para demostrar el CRUD sin usar librerias pesadas.
+
+Impacto:
+
+- El CRUD puede probarse desde navegador en `http://localhost:5173`.
+- El frontend muestra mensajes de exito y error.
+- El backend se mantiene en GREEN con 24 pruebas e2e.
+- El build del frontend pasa correctamente.
+- Estado Fase 13: GREEN.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -449,6 +484,15 @@ Formato:
 npm run format
 ```
 
+Frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+npm run build
+```
+
 ## Registro de fases
 
 | Fase | Descripcion | Estado |
@@ -466,4 +510,5 @@ npm run format
 | Fase 10 | Agregar seguridad por API Key | Completada |
 | Fase 11 | Agregar logs y trazabilidad | Completada |
 | Fase 12 | Agregar Swagger / OpenAPI | Completada |
-| Fase 13 | Agregar frontend, GitHub Actions y documentacion final | Pendiente |
+| Fase 13 | Agregar frontend con Node.js y Vite | Completada |
+| Fase 14 | Agregar GitHub Actions y documentacion final | Pendiente |

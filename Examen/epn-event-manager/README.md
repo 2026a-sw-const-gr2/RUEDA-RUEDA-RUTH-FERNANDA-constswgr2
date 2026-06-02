@@ -8,11 +8,50 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 12 completada: se documento la API con Swagger/OpenAPI.
+Fase 13 completada: se creo un frontend con Node.js, Vite y JavaScript simple.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
-No existe frontend ni GitHub Actions en esta fase.
+No existe GitHub Actions en esta fase.
+
+## Frontend
+
+El hub visual esta en:
+
+```text
+frontend/
+```
+
+Usa Vite con JavaScript simple. Permite listar platos tipicos en tarjetas, crear, ver detalle, editar, eliminar y consultar estadisticas.
+
+El frontend consume el backend NestJS y envia la cabecera:
+
+```text
+X-FIS-EPN-KEY
+```
+
+Comandos del frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+npm run build
+```
+
+URL local de Vite:
+
+```text
+http://localhost:5173
+```
+
+Antes de usar la interfaz, ejecutar el backend en otra terminal:
+
+```bash
+npm run start:dev
+```
+
+El backend tiene CORS habilitado para permitir el consumo desde el frontend.
 
 ## Swagger / OpenAPI
 
@@ -162,6 +201,14 @@ epn-event-manager/
 ├── db/
 │   ├── events.sqlite
 │   └── platos-tipicos.sqlite
+├── frontend/
+│   ├── src/
+│   │   ├── api.js
+│   │   ├── main.js
+│   │   └── styles.css
+│   ├── index.html
+│   ├── package.json
+│   └── package-lock.json
 ├── src/
 │   ├── database/
 │   │   ├── database.module.ts
@@ -197,7 +244,8 @@ epn-event-manager/
 - Existe carpeta `db` para persistencia.
 - Existen pruebas Jest unitarias en `src` y e2e en `test`.
 - Existe `src/modules/platos-tipicos` con controller, service y DTOs.
-- No existe configuracion de frontend ni GitHub Actions en esta fase.
+- Existe frontend Vite en `frontend`.
+- No existe configuracion de GitHub Actions en esta fase.
 
 ## Ubicacion del CRUD inicial
 
@@ -422,6 +470,15 @@ Tests: 24 passed, 24 total
 Estado TDD: GREEN
 ```
 
+Resultado Fase 13:
+
+```text
+Frontend build: npm run build paso correctamente dentro de frontend
+Backend unit: 1 passed
+Backend e2e: 24 passed
+Estado: GREEN
+```
+
 Cobertura:
 
 ```bash
@@ -473,7 +530,8 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 10 | Seguridad por API Key | Completada |
 | Fase 11 | Logs y trazabilidad | Completada |
 | Fase 12 | Swagger / OpenAPI | Completada |
-| Fase 13 | Frontend, GitHub Actions y documentacion final | Pendiente |
+| Fase 13 | Frontend con Node.js y Vite | Completada |
+| Fase 14 | GitHub Actions y documentacion final | Pendiente |
 
 ## Git
 

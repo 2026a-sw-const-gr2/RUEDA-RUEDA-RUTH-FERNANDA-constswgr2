@@ -293,3 +293,30 @@ El cambio mejora la mantenibilidad y la integracion sin modificar la logica del 
 ### Impacto
 
 La API queda documentada y las pruebas quedaron en GREEN con 24 pruebas e2e pasando.
+
+## Actualizacion Fase 13: frontend con Node.js
+
+### Antes
+
+No existia una interfaz web para demostrar el CRUD de platos tipicos ecuatorianos.
+
+### Validacion
+
+Se documento checklist manual en `PLAN_TDD.md` y se ejecuto:
+
+- build del frontend;
+- build del backend;
+- pruebas unitarias del backend;
+- pruebas e2e del backend.
+
+### Despues
+
+Se creo `frontend/` con Vite y JavaScript simple. La interfaz consume el backend, envia `X-FIS-EPN-KEY`, muestra tarjetas, permite crear, ver, editar, eliminar y consultar estadisticas.
+
+### Justificacion
+
+El cambio agrega una demostracion visual simple y liviana para el examen sin usar librerias pesadas.
+
+### Impacto
+
+El sistema puede demostrarse desde navegador y el backend se mantiene en GREEN con 24 pruebas e2e pasando.

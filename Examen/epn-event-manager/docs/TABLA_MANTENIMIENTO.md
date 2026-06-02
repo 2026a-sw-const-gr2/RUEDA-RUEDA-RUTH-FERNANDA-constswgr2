@@ -53,6 +53,12 @@ Clasificacion inicial de deuda tecnica detectada en el CRUD persistente de plato
 | --- | --- | --- | --- |
 | No habia documentacion interactiva para endpoints, DTOs, errores ni cabecera de seguridad. | Se configuro Swagger en `/api/docs`, se documentaron DTOs, endpoints, respuestas de error y `X-FIS-EPN-KEY`. | Es preventivo y perfectivo porque reduce errores de integracion y mejora la experiencia de prueba de la API. | API mas facil de consumir, probar y revisar durante el examen sin cambiar la logica del CRUD. |
 
+## Frontend aplicado en Fase 13
+
+| Antes | Despues | Justificacion | Impacto |
+| --- | --- | --- | --- |
+| No habia interfaz web para demostrar el CRUD desde navegador. | Se creo `frontend/` con Vite y JavaScript simple, tarjetas, formulario, detalle, acciones CRUD, estadisticas y consumo con `X-FIS-EPN-KEY`. | Es perfectivo porque agrega un hub visual que facilita demostrar el sistema sin modificar la logica del CRUD. | Mejor demostracion del examen, validacion manual desde navegador y consumo real de endpoints protegidos. |
+
 ## Orden sugerido
 
 1. Ampliar pruebas del CRUD y errores.
