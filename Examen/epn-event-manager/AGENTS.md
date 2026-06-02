@@ -49,3 +49,19 @@ Después se aplica el examen de mantenimiento:
 - frontend
 - GitHub Actions
 - documentación final
+
+## Frontend
+
+El frontend debe crearse con Node.js dentro de la carpeta:
+
+frontend/
+
+Se recomienda usar Vite con JavaScript simple para mantener el proyecto liviano y fácil de ejecutar.
+
+El frontend debe tener su propio package.json.
+
+Debe consumir la API del backend NestJS y enviar la cabecera:
+
+X-FIS-EPN-KEY
+
+No subir node_modules.
