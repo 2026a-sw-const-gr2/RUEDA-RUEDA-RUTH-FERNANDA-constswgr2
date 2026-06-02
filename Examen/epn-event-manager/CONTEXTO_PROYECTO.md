@@ -164,6 +164,33 @@ Resultado de ejecucion:
 
 No fue necesario modificar logica del CRUD para que las pruebas pasen.
 
+## Mantenimiento correctivo Fase 6
+
+En Fase 6 se reviso el comportamiento funcional de `DELETE /platos-tipicos/:id`.
+
+Antes:
+
+- Existia deuda documentada sobre posible exito falso al eliminar.
+- Faltaba una prueba que confirmara que la eliminacion persistia despues de reiniciar la aplicacion.
+- Faltaba una prueba explicita para confirmar que eliminar un id inexistente no devuelve exito.
+
+Despues:
+
+- Se agrego prueba e2e para confirmar que un plato eliminado sigue inexistente despues de reiniciar la aplicacion Nest.
+- Se reforzo la prueba de eliminacion inexistente para confirmar 404 y ausencia de `{ deleted: true }`.
+- Las pruebas quedaron en GREEN.
+
+Justificacion:
+
+- El codigo actual ya usaba `findOne` y `remove` de TypeORM, por lo que el fallo no se reprodujo.
+- No fue necesario modificar logica del CRUD; la intervencion correctiva fue fortalecer pruebas automatizadas.
+
+Impacto:
+
+- `DELETE` queda verificado contra SQLite.
+- El sistema no retorna exito si la eliminacion no se realiza.
+- Las pruebas del CRUD se mantienen pasando.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -230,5 +257,8 @@ npm run format
 | Fase 3 | Probar CRUD inicial y persistencia | Completada |
 | Fase 4 | Diagnosticar deuda tecnica del CRUD inicial | Completada |
 | Fase 5 | Crear pruebas TDD base del CRUD inicial | Completada |
-| Fase 6 | Aplicar mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
-| Fase 7 | Agregar logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
+| Fase 6 | Aplicar mantenimiento correctivo | Completada |
+| Fase 7 | Aplicar mantenimiento adaptativo | Pendiente |
+| Fase 8 | Aplicar mantenimiento perfectivo | Pendiente |
+| Fase 9 | Aplicar mantenimiento preventivo | Pendiente |
+| Fase 10 | Agregar logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |

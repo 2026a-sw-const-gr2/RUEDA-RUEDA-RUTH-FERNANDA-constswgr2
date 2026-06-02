@@ -271,8 +271,11 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 3 | Probar CRUD inicial y persistencia | Completada |
 | Fase 4 | Diagnostico de deuda tecnica | Completada |
 | Fase 5 | Crear pruebas TDD base del CRUD inicial | Completada |
-| Fase 6 | Mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
-| Fase 7 | Logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
+| Fase 6 | Mantenimiento correctivo | Completada |
+| Fase 7 | Mantenimiento adaptativo | Pendiente |
+| Fase 8 | Mantenimiento perfectivo | Pendiente |
+| Fase 9 | Mantenimiento preventivo | Pendiente |
+| Fase 10 | Logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
 
 ## Git
 

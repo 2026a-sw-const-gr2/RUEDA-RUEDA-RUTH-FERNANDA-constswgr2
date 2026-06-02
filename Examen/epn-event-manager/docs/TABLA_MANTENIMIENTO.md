@@ -11,6 +11,12 @@ Clasificacion inicial de deuda tecnica detectada en el CRUD persistente de plato
 | Perfectivo | No existe endpoint de estadisticas para total de platos, precio promedio, precio minimo, precio maximo, platos por region y platos por categoria. | `src/modules/platos-tipicos/platos-tipicos.controller.ts`, `src/modules/platos-tipicos/platos-tipicos.service.ts` | Crear endpoint de estadisticas con pruebas previas y calculos desde SQLite. | Mayor valor funcional para consulta y analisis de datos del CRUD. |
 | Preventivo | Faltan validaciones robustas, sanitizacion, API Key, logs estructurados, trazabilidad y Swagger. | `src/modules/platos-tipicos/dto/create-plato-tipico.dto.ts`, `src/modules/platos-tipicos/dto/update-plato-tipico.dto.ts`, `src/modules/platos-tipicos/platos-tipicos.service.ts`, `src/main.ts`, `src/app.module.ts` | Aplicar validaciones declarativas, sanitizar textos, proteger endpoints con API Key, agregar logs estructurados, documentar con Swagger y probar entradas maliciosas. | Menor probabilidad de fallos futuros, mejor seguridad y mejor mantenibilidad. |
 
+## Mantenimiento correctivo aplicado en Fase 6
+
+| Antes | Despues | Justificacion | Impacto |
+| --- | --- | --- | --- |
+| El diagnostico marcaba riesgo de exito falso en `DELETE /platos-tipicos/:id` y falta de pruebas para confirmar eliminacion persistente. | Se agregaron pruebas e2e que verifican que `DELETE` elimina el registro, que el plato sigue eliminado tras reiniciar la aplicacion y que un id inexistente devuelve 404 sin `{ deleted: true }`. | El codigo actual ya usaba `findOne` antes de eliminar y `remove` de TypeORM, por lo que el fallo funcional no se reprodujo. La correccion minima fue fortalecer la prueba correctiva y confirmar GREEN. | Mayor confianza en el comportamiento de eliminacion y en el manejo controlado de errores sin cambiar contratos del CRUD. |
+
 ## Orden sugerido
 
 1. Ampliar pruebas del CRUD y errores.

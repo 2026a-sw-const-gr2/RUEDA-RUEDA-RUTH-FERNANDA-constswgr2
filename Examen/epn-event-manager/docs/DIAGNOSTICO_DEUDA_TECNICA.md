@@ -99,3 +99,30 @@ Riesgo: entradas como `"   "` podrian aceptarse como datos validos.
 ## Conclusion
 
 El CRUD base persistente esta listo para mantenimiento, pero tiene deuda tecnica intencional o pendiente en pruebas, validacion, seguridad, trazabilidad, documentacion API y capacidades perfectivas. La siguiente fase debe priorizar TDD antes de corregir o mejorar el comportamiento.
+
+## Actualizacion Fase 6: mantenimiento correctivo
+
+### Antes
+
+El diagnostico inicial identifico riesgo de que `DELETE /platos-tipicos/:id` devolviera exito sin eliminar realmente, o que un id inexistente no tuviera error controlado.
+
+### Prueba correctiva
+
+Se agregaron pruebas e2e para confirmar:
+
+- `DELETE /platos-tipicos/:id` elimina un plato existente.
+- El plato eliminado no vuelve a aparecer despues de reiniciar la aplicacion Nest.
+- `DELETE /platos-tipicos/:id` con id inexistente devuelve 404.
+- Una eliminacion inexistente no devuelve `{ deleted: true }`.
+
+### Despues
+
+Las pruebas pasaron en GREEN. El comportamiento correctivo ya estaba implementado en `src/modules/platos-tipicos/platos-tipicos.service.ts` mediante `findOne` y `remove` de TypeORM, asi que no fue necesario modificar la logica del CRUD.
+
+### Justificacion
+
+No se cambio codigo funcional porque el fallo no se reprodujo. La intervencion correctiva se limito a blindar el comportamiento con pruebas automatizadas.
+
+### Impacto
+
+El CRUD queda respaldado por pruebas contra exito falso, errores 404 y persistencia de la eliminacion en SQLite.

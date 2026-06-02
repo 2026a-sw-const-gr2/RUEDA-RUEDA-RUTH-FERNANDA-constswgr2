@@ -112,12 +112,22 @@ Resultado documentado:
 
 ## Pruebas de mantenimiento correctivo
 
-- `DELETE /platos-tipicos/:id` elimina realmente en SQLite.
-- `DELETE /platos-tipicos/:id` con id inexistente devuelve error controlado.
-- No se retorna exito falso en operaciones fallidas.
+- [x] `DELETE /platos-tipicos/:id` elimina realmente en SQLite.
+- [x] `DELETE /platos-tipicos/:id` mantiene el plato eliminado despues de reiniciar la aplicacion Nest.
+- [x] `DELETE /platos-tipicos/:id` con id inexistente devuelve error controlado.
+- [x] No se retorna exito falso en operaciones fallidas.
 - `GET /platos-tipicos/:id` con id inexistente devuelve 404.
 - `PATCH /platos-tipicos/:id` con id inexistente devuelve 404.
 - `PATCH /platos-tipicos/:id` con datos invalidos devuelve 400.
+
+Estado TDD Fase 6: GREEN.
+
+Resultado documentado:
+
+- Se agregaron pruebas correctivas para `DELETE`.
+- `npm run test:e2e`: 2 suites pasaron, 11 pruebas pasaron.
+- `npm test`: 1 suite paso, 1 prueba paso.
+- No fue necesario modificar logica del CRUD porque el fallo funcional no se reprodujo.
 
 ## Pruebas de mantenimiento adaptativo
 
