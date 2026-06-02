@@ -457,6 +457,33 @@ Impacto:
 - Cada `push` o `pull_request` validara instalacion, lint, pruebas y build del backend, ademas del build del frontend.
 - Estado Fase 14: GREEN local y workflow configurado.
 
+## Pruebas manuales de API Fase 15
+
+En Fase 15 se creo evidencia para probar manualmente la API.
+
+Antes:
+
+- Existian pruebas automatizadas e2e.
+- No habia una guia manual unificada para probar CRUD, seguridad, validaciones y persistencia.
+
+Despues:
+
+- Se creo `docs/PRUEBAS_MANUALES_API.md`.
+- La guia incluye comandos `curl`.
+- La guia documenta `X-FIS-EPN-KEY`.
+- La guia cubre crear, listar, consultar, actualizar, eliminar y stats.
+- La guia cubre API Key correcta, API Key incorrecta, datos invalidos, script malicioso y precio negativo.
+- La guia cubre persistencia en SQLite despues de reiniciar.
+
+Justificacion:
+
+- El cambio agrega evidencia clara para demostrar la API manualmente durante el examen.
+
+Impacto:
+
+- La API puede validarse con pasos reproducibles sin depender solo de pruebas automatizadas o Swagger.
+- Estado Fase 15: completada.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -541,4 +568,5 @@ npm run build
 | Fase 12 | Agregar Swagger / OpenAPI | Completada |
 | Fase 13 | Agregar frontend con Node.js y Vite | Completada |
 | Fase 14 | Agregar GitHub Actions para backend y frontend | Completada |
-| Fase 15 | Agregar documentacion final | Pendiente |
+| Fase 15 | Agregar pruebas manuales de API | Completada |
+| Fase 16 | Agregar documentacion final | Pendiente |

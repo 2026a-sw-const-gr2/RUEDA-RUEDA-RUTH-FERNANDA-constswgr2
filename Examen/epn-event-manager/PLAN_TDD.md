@@ -281,3 +281,22 @@ Resultado documentado:
 - `npm run build`: backend paso correctamente.
 - `npm test`: 1 suite paso, 1 prueba paso.
 - `npm run test:e2e`: 2 suites pasaron, 24 pruebas pasaron.
+
+## Checklist manual de API
+
+Evidencia creada en `docs/PRUEBAS_MANUALES_API.md`.
+
+- [x] Crear plato tipico.
+- [x] Listar platos.
+- [x] Consultar plato por id.
+- [x] Actualizar plato.
+- [x] Eliminar plato.
+- [x] Consultar estadisticas.
+- [x] Probar API Key correcta con `X-FIS-EPN-KEY`.
+- [x] Probar API Key incorrecta.
+- [x] Probar datos invalidos.
+- [x] Probar script malicioso.
+- [x] Probar precio negativo.
+- [x] Probar persistencia SQLite despues de reiniciar.
+
+Estado Fase 15: documentacion de pruebas manuales completada.

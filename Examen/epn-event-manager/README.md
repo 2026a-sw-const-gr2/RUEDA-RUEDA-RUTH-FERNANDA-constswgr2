@@ -8,7 +8,7 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 14 completada: se creo integracion continua con GitHub Actions para backend y frontend.
+Fase 15 completada: se creo evidencia de pruebas manuales para la API.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
@@ -133,6 +133,35 @@ curl http://localhost:3000/platos-tipicos \
 Sin API Key o con una API Key incorrecta, el CRUD responde `401 Unauthorized`.
 
 El endpoint `GET /health` queda libre para verificacion basica del servicio.
+
+## Pruebas manuales de API
+
+La evidencia manual para probar la API esta en:
+
+```text
+docs/PRUEBAS_MANUALES_API.md
+```
+
+Incluye pruebas con `curl` para:
+
+- crear plato tipico;
+- listar platos;
+- consultar por id;
+- actualizar;
+- eliminar;
+- consultar estadisticas;
+- usar API Key correcta;
+- usar API Key incorrecta;
+- enviar datos invalidos;
+- enviar script malicioso;
+- enviar precio negativo;
+- verificar persistencia en SQLite despues de reiniciar.
+
+Todas las pruebas protegidas documentan la cabecera:
+
+```text
+X-FIS-EPN-KEY
+```
 
 ## Logs y trazabilidad
 
@@ -521,6 +550,13 @@ Frontend build: paso
 Estado CI: configurado
 ```
 
+Resultado Fase 15:
+
+```text
+Evidencia manual creada en docs/PRUEBAS_MANUALES_API.md
+Incluye X-FIS-EPN-KEY y escenarios CRUD, seguridad, validacion y persistencia
+```
+
 Cobertura:
 
 ```bash
@@ -574,7 +610,8 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 12 | Swagger / OpenAPI | Completada |
 | Fase 13 | Frontend con Node.js y Vite | Completada |
 | Fase 14 | GitHub Actions para backend y frontend | Completada |
-| Fase 15 | Documentacion final | Pendiente |
+| Fase 15 | Coleccion o pruebas manuales de API | Completada |
+| Fase 16 | Documentacion final | Pendiente |
 
 ## Git
 
