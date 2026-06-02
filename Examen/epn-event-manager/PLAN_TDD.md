@@ -300,3 +300,41 @@ Evidencia creada en `docs/PRUEBAS_MANUALES_API.md`.
 - [x] Probar persistencia SQLite despues de reiniciar.
 
 Estado Fase 15: documentacion de pruebas manuales completada.
+
+## Estado final TDD
+
+El proyecto primero creo el CRUD inicial persistente y despues aplico mantenimiento guiado por pruebas.
+
+Pruebas creadas o ampliadas:
+
+- CRUD base: crear, listar, consultar, actualizar, eliminar y persistencia SQLite.
+- Correctivo: eliminacion real, id inexistente y ausencia de exito falso.
+- Adaptativo: metadata en operaciones CREATE, READ, UPDATE, DELETE y formato ISO 8601.
+- Perfectivo: endpoint `GET /platos-tipicos/stats`.
+- Preventivo: campos vacios, precio negativo, URL invalida, `<script>`, patrones SQL y textos largos.
+- Seguridad: API Key ausente, incorrecta y correcta.
+- Logs: `INFO` en operaciones y `WARN` en API Key/validaciones.
+- Swagger: disponibilidad de `/api/docs`.
+
+Comandos ejecutados durante el cierre:
+
+```bash
+npm ci
+npm run lint
+npm test
+npm run build
+npm run test:e2e
+cd frontend
+npm ci
+npm run build
+```
+
+Estado final:
+
+- Backend lint: GREEN.
+- Backend unit test: GREEN.
+- Backend e2e: GREEN, 24 pruebas.
+- Backend build: GREEN.
+- Frontend build: GREEN.
+- CI/CD: configurado en `.github/workflows/node-ci.yml`.
+- Pruebas manuales: documentadas en `docs/PRUEBAS_MANUALES_API.md`.

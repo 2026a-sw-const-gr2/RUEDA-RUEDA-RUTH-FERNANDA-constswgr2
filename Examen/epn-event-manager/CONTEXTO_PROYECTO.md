@@ -484,6 +484,54 @@ Impacto:
 - La API puede validarse con pasos reproducibles sin depender solo de pruebas automatizadas o Swagger.
 - Estado Fase 15: completada.
 
+## Documentacion final Fase 16
+
+En Fase 16 se consolido la documentacion final para sustentacion.
+
+Estado final:
+
+- CRUD inicial persistente creado antes de los mantenimientos.
+- Diagnostico de deuda tecnica documentado.
+- Mantenimiento correctivo aplicado y documentado.
+- Mantenimiento adaptativo aplicado y documentado.
+- Mantenimiento perfectivo aplicado y documentado.
+- Mantenimiento preventivo aplicado y documentado.
+- Seguridad por API Key implementada.
+- Logs y trazabilidad implementados.
+- Swagger/OpenAPI disponible.
+- Frontend Node.js con Vite creado.
+- GitHub Actions configurado.
+- Pruebas manuales API documentadas.
+
+Comandos finales:
+
+```bash
+npm ci
+npm run lint
+npm test
+npm run build
+npm run test:e2e
+cd frontend
+npm ci
+npm run build
+```
+
+Evidencia de persistencia:
+
+- La base se guarda en `db/platos-tipicos.sqlite`.
+- La prueba e2e reinicia la aplicacion Nest y confirma que el plato creado sigue disponible.
+- La guia `docs/PRUEBAS_MANUALES_API.md` incluye prueba manual de reinicio.
+
+Evidencia de CI/CD:
+
+- Workflow: `.github/workflows/node-ci.yml`.
+- Evento: `push` y `pull_request`.
+- Node.js: 20.
+- Valida backend con `npm ci`, `npm run lint`, `npm test`, `npm run build`.
+- Valida frontend con `npm ci` y `npm run build`.
+
+Estado Fase 16: completada.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -569,4 +617,4 @@ npm run build
 | Fase 13 | Agregar frontend con Node.js y Vite | Completada |
 | Fase 14 | Agregar GitHub Actions para backend y frontend | Completada |
 | Fase 15 | Agregar pruebas manuales de API | Completada |
-| Fase 16 | Agregar documentacion final | Pendiente |
+| Fase 16 | Agregar documentacion final | Completada |

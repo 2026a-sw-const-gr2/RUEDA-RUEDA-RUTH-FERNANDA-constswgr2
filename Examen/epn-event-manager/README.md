@@ -1,20 +1,250 @@
-﻿# EPN Event Manager - Examen de Mantenimiento de Software
+# EPN Event Manager - Examen de Mantenimiento de Software
 
 ## Descripcion
 
-Proyecto NestJS para el examen de mantenimiento de software.
+Proyecto NestJS para sustentar un examen de mantenimiento de software.
 
-El objetivo es construir primero un CRUD inicial persistente de platos tipicos ecuatorianos y luego aplicar sobre ese CRUD actividades de mantenimiento correctivo, adaptativo, perfectivo y preventivo.
+El sistema primero construyo un CRUD inicial persistente de platos tipicos ecuatorianos. Despues, sobre ese CRUD base, se aplicaron actividades de diagnostico, TDD y mantenimiento correctivo, adaptativo, perfectivo y preventivo.
 
-## Estado actual
+## Tema
 
-Fase 15 completada: se creo evidencia de pruebas manuales para la API.
+Recurso principal: `PlatoTipico`.
 
-El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
+Campos oficiales:
+
+| Campo | Descripcion |
+| --- | --- |
+| `id` | Identificador unico |
+| `nombre` | Nombre del plato tipico |
+| `descripcion` | Descripcion del plato |
+| `region` | Region del Ecuador |
+| `ingredientes` | Ingredientes principales |
+| `precio` | Precio referencial |
+| `imagenUrl` | URL de imagen |
+| `categoria` | Categoria gastronomica |
+
+No son campos obligatorios del recurso: `provincia`, `disponible`, `createdAt`, `updatedAt`.
+
+## Arquitectura
+
+El backend NestJS es el proyecto principal. No existe carpeta `backend` separada.
+
+```text
+epn-event-manager/
+├── .github/workflows/node-ci.yml
+├── db/
+│   └── platos-tipicos.sqlite
+├── docs/
+│   ├── DIAGNOSTICO_DEUDA_TECNICA.md
+│   ├── PRUEBAS_MANUALES_API.md
+│   └── TABLA_MANTENIMIENTO.md
+├── frontend/
+│   ├── src/
+│   │   ├── api.js
+│   │   ├── main.js
+│   │   └── styles.css
+│   ├── index.html
+│   └── package.json
+├── src/
+│   ├── database/
+│   ├── modules/
+│   │   ├── events/
+│   │   ├── health/
+│   │   ├── platos-tipicos/
+│   │   └── stats/
+│   ├── main.ts
+│   └── swagger.ts
+├── test/
+├── CONTEXTO_PROYECTO.md
+├── PLAN_TDD.md
+└── README.md
+```
+
+Componentes principales:
+
+- Backend: NestJS.
+- Persistencia: TypeORM con SQLite.
+- Base de datos: `db/platos-tipicos.sqlite`.
+- Frontend: Vite con JavaScript simple.
+- Seguridad: API Key por cabecera `X-FIS-EPN-KEY`.
+- Documentacion API: Swagger en `/api/docs`.
+- CI: GitHub Actions con Node.js 20.
+
+## Instalacion
+
+Backend:
+
+```bash
+npm install
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm install
+```
+
+## Variables de entorno
+
+Existe `.env.example` y no se debe subir `.env` real.
+
+Variable principal:
+
+```text
+FIS_EPN_API_KEY=clave-de-prueba
+```
+
+En PowerShell:
+
+```powershell
+$env:FIS_EPN_API_KEY="clave-de-prueba"; npm run start:dev
+```
+
+## Ejecucion
+
+Backend en desarrollo:
+
+```bash
+npm run start:dev
+```
+
+Backend normal:
+
+```bash
+npm run start
+```
+
+Backend despues del build:
+
+```bash
+npm run start:prod
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm run dev
+```
+
+URLs locales:
+
+- Backend: `http://localhost:3000`
+- Swagger: `http://localhost:3000/api/docs`
+- Frontend: `http://localhost:5173`
+
+## Persistencia SQLite
+
+El CRUD no usa arreglos en memoria como almacenamiento principal. Los platos se guardan en:
+
+```text
+db/platos-tipicos.sqlite
+```
+
+Evidencia de persistencia:
+
+1. Crear un plato con `POST /platos-tipicos`.
+2. Detener el backend.
+3. Iniciar nuevamente el backend.
+4. Consultar `GET /platos-tipicos`.
+5. El plato creado sigue disponible.
+
+La guia manual esta en:
+
+```text
+docs/PRUEBAS_MANUALES_API.md
+```
+
+## API Key
+
+Los endpoints del CRUD requieren:
+
+```text
+X-FIS-EPN-KEY
+```
+
+Ejemplo:
+
+```bash
+curl http://localhost:3000/platos-tipicos \
+  -H "X-FIS-EPN-KEY: clave-de-prueba"
+```
+
+Sin API Key o con API Key incorrecta, el sistema devuelve `401 Unauthorized`.
+
+## Endpoints
+
+| Metodo | Endpoint | Descripcion |
+| --- | --- | --- |
+| `POST` | `/platos-tipicos` | Crear plato tipico |
+| `GET` | `/platos-tipicos` | Listar platos tipicos |
+| `GET` | `/platos-tipicos/:id` | Consultar plato por id |
+| `PATCH` | `/platos-tipicos/:id` | Actualizar plato |
+| `DELETE` | `/platos-tipicos/:id` | Eliminar plato |
+| `GET` | `/platos-tipicos/stats` | Consultar estadisticas |
+| `GET` | `/health` | Verificar salud del backend |
+
+Ejemplo de creacion:
+
+```bash
+curl -X POST http://localhost:3000/platos-tipicos \
+  -H "Content-Type: application/json" \
+  -H "X-FIS-EPN-KEY: clave-de-prueba" \
+  -d "{\"nombre\":\"Encebollado\",\"descripcion\":\"Plato tradicional de la Costa ecuatoriana.\",\"region\":\"Costa\",\"ingredientes\":\"Pescado, yuca, cebolla, tomate y limon\",\"precio\":3.5,\"imagenUrl\":\"https://example.com/encebollado.jpg\",\"categoria\":\"Sopa tradicional\"}"
+```
+
+## Swagger
+
+Swagger/OpenAPI esta disponible en:
+
+```text
+http://localhost:3000/api/docs
+```
+
+Documenta:
+
+- endpoints del CRUD;
+- endpoint de estadisticas;
+- DTOs de creacion y actualizacion;
+- errores `400`, `401` y `404`;
+- cabecera `X-FIS-EPN-KEY`.
+
+## Pruebas
+
+Backend:
+
+```bash
+npm test
+npm run test:e2e
+npm run build
+npm run lint
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm run build
+```
+
+Pruebas manuales:
+
+```text
+docs/PRUEBAS_MANUALES_API.md
+```
+
+Estado final:
+
+- pruebas unitarias backend: pasan;
+- pruebas e2e backend: pasan con 24 pruebas;
+- build backend: pasa;
+- lint backend: pasa;
+- build frontend: pasa.
 
 ## GitHub Actions
 
-La integracion continua esta configurada en:
+Workflow:
 
 ```text
 .github/workflows/node-ci.yml
@@ -27,580 +257,110 @@ Se ejecuta en:
 
 Usa Node.js 20 y valida:
 
-- backend NestJS con `npm ci`;
-- lint del backend con `npm run lint`;
-- pruebas del backend con `npm test`;
-- build del backend con `npm run build`;
-- frontend Vite con `npm ci`;
-- build del frontend con `npm run build`.
-
-El workflow usa como directorio de trabajo principal:
-
-```text
-Examen/epn-event-manager
-```
-
-No ejecuta pruebas de frontend porque el frontend no tiene script de pruebas configurado.
-
-No ejecuta scripts inventados.
+- `npm ci`;
+- `npm run lint`;
+- `npm test`;
+- `npm run build`;
+- `cd frontend && npm ci`;
+- `cd frontend && npm run build`.
 
 ## Frontend
 
-El hub visual esta en:
+El frontend esta en:
 
 ```text
 frontend/
 ```
 
-Usa Vite con JavaScript simple. Permite listar platos tipicos en tarjetas, crear, ver detalle, editar, eliminar y consultar estadisticas.
+Funciones:
 
-El frontend consume el backend NestJS y envia la cabecera:
+- listar platos en tarjetas;
+- mostrar imagen, nombre, descripcion, region, ingredientes, precio y categoria;
+- crear platos;
+- ver detalle;
+- editar platos;
+- eliminar platos;
+- mostrar estadisticas;
+- enviar `X-FIS-EPN-KEY`;
+- mostrar mensajes de exito y error.
+
+## Tipos de mantenimiento aplicados
+
+| Tipo | Resumen |
+| --- | --- |
+| Correctivo | Se fortalecio el comportamiento de eliminacion y errores controlados con pruebas e2e. |
+| Adaptativo | Se agrego metadata estandarizada e integracion interna con eventos para EPN Event Manager. |
+| Perfectivo | Se agrego `GET /platos-tipicos/stats` y frontend visual para demostrar el CRUD. |
+| Preventivo | Se agregaron validaciones, sanitizacion, API Key, logs, Swagger y CI. |
+
+La tabla para exposicion esta en:
 
 ```text
-X-FIS-EPN-KEY
+docs/TABLA_MANTENIMIENTO.md
 ```
 
-Comandos del frontend:
+## Evidencia TDD
+
+El flujo aplicado fue:
+
+1. Crear CRUD inicial persistente.
+2. Diagnosticar deuda tecnica.
+3. Crear o ajustar pruebas.
+4. Confirmar RED cuando aplicaba.
+5. Implementar el minimo cambio.
+6. Confirmar GREEN.
+7. Documentar la fase.
+
+Plan y evidencia:
+
+```text
+PLAN_TDD.md
+```
+
+## Comandos para demo
+
+Terminal 1, backend:
+
+```powershell
+$env:FIS_EPN_API_KEY="clave-de-prueba"; npm run start:dev
+```
+
+Terminal 2, frontend:
 
 ```bash
 cd frontend
-npm install
 npm run dev
-npm run build
 ```
 
-URL local de Vite:
+Abrir:
 
 ```text
 http://localhost:5173
 ```
 
-Antes de usar la interfaz, ejecutar el backend en otra terminal:
-
-```bash
-npm run start:dev
-```
-
-El backend tiene CORS habilitado para permitir el consumo desde el frontend.
-
-## Swagger / OpenAPI
-
-La documentacion interactiva de la API esta disponible en:
+Swagger:
 
 ```text
 http://localhost:3000/api/docs
 ```
 
-Swagger documenta:
-
-- Endpoints del CRUD de platos tipicos.
-- Endpoint `GET /platos-tipicos/stats`.
-- DTOs de creacion y actualizacion.
-- Respuestas de error `400`, `401` y `404`.
-- Cabecera de seguridad `X-FIS-EPN-KEY`.
-
-Para probar endpoints protegidos desde Swagger, usar la autorizacion `X-FIS-EPN-KEY` con el valor configurado en `FIS_EPN_API_KEY`.
-
-## Seguridad por API Key
-
-Los endpoints del CRUD de platos tipicos requieren la cabecera:
-
-```text
-X-FIS-EPN-KEY
-```
-
-La clave se lee desde la variable de entorno:
-
-```text
-FIS_EPN_API_KEY
-```
-
-Existe un archivo de ejemplo que si se puede versionar:
-
-```text
-.env.example
-```
-
-No se debe subir `.env` real.
-
-Ejemplo:
+Prueba rapida:
 
 ```bash
 curl http://localhost:3000/platos-tipicos \
   -H "X-FIS-EPN-KEY: clave-de-prueba"
 ```
 
-Sin API Key o con una API Key incorrecta, el CRUD responde `401 Unauthorized`.
-
-El endpoint `GET /health` queda libre para verificacion basica del servicio.
-
-## Pruebas manuales de API
-
-La evidencia manual para probar la API esta en:
-
-```text
-docs/PRUEBAS_MANUALES_API.md
-```
-
-Incluye pruebas con `curl` para:
-
-- crear plato tipico;
-- listar platos;
-- consultar por id;
-- actualizar;
-- eliminar;
-- consultar estadisticas;
-- usar API Key correcta;
-- usar API Key incorrecta;
-- enviar datos invalidos;
-- enviar script malicioso;
-- enviar precio negativo;
-- verificar persistencia en SQLite despues de reiniciar.
-
-Todas las pruebas protegidas documentan la cabecera:
-
-```text
-X-FIS-EPN-KEY
-```
-
-## Logs y trazabilidad
-
-El CRUD registra logs estructurados usando `Logger` de NestJS.
-
-Cada log usa formato JSON e incluye:
-
-- `level`: `INFO`, `WARN` o `ERROR`.
-- `timestampISO`: fecha en formato ISO 8601.
-- `route`: ruta relacionada.
-- `action`: `CREATE`, `READ`, `UPDATE`, `DELETE`, `VALIDATION` o `API_KEY_VALIDATION`.
-- `platoId`: id del plato cuando aplica.
-- `message`: descripcion corta del evento.
-
-Se registran:
-
-- Operaciones exitosas del CRUD con nivel `INFO`.
-- Intentos fallidos, ids inexistentes, validaciones y API Key invalida con nivel `WARN`.
-- Errores no controlados con nivel `ERROR`.
-
-Para evidenciar la trazabilidad, ejecutar el backend y realizar operaciones con `curl`. Los logs aparecen en consola:
-
-```bash
-npm run start:dev
-```
-
-Ejemplo de log:
-
-```json
-{"level":"INFO","timestampISO":"2026-06-02T01:50:00.000Z","route":"/platos-tipicos","action":"CREATE","platoId":1,"message":"Operacion CREATE ejecutada"}
-```
-
-## Recurso principal
-
-`PlatoTipico`.
-
-Campos oficiales:
-
-| Campo | Descripcion |
-| --- | --- |
-| `id` | Identificador unico del plato tipico |
-| `nombre` | Nombre del plato tipico |
-| `descripcion` | Descripcion del plato |
-| `region` | Region del Ecuador a la que pertenece |
-| `ingredientes` | Ingredientes principales |
-| `precio` | Precio referencial |
-| `imagenUrl` | URL de imagen del plato |
-| `categoria` | Categoria gastronomica |
-
-No se deben agregar como campos obligatorios del recurso: `provincia`, `disponible`, `createdAt`, `updatedAt`.
-
-Los timestamps ISO 8601 se usaran solo en logs, metadata adaptativa o auditoria cuando una fase lo solicite.
-
-## Validaciones preventivas
-
-El CRUD valida y sanitiza datos antes de guardar:
-
-- `nombre`: obligatorio, maximo 100 caracteres.
-- `descripcion`: obligatoria, maximo 500 caracteres.
-- `region`: obligatoria.
-- `ingredientes`: obligatorio.
-- `precio`: mayor o igual a 0.
-- `imagenUrl`: URL valida con protocolo `http` o `https`.
-- `categoria`: obligatoria, maximo 80 caracteres.
-- Se aplica `trim` a textos.
-- Se rechazan cadenas vacias o con solo espacios.
-- Se bloquea `<script>`.
-- Se bloquean `SELECT`, `DROP`, `INSERT` y comentarios SQL `--`.
-- Se rechazan textos demasiado largos.
-
-## Metadata adaptativa
-
-Las respuestas de `POST`, `GET`, `PATCH` y `DELETE` usan esta estructura:
-
-```json
-{
-  "data": {},
-  "metadata": {
-    "source": "platos-tipicos-crud",
-    "system": "Sistema de Platos Típicos Ecuatorianos",
-    "apiVersion": "v1",
-    "timestampISO": "2026-06-02T01:40:00.000Z",
-    "timezone": "America/Guayaquil",
-    "environment": "development",
-    "integrationTarget": "EPN Event Manager"
-  }
-}
-```
-
-La metadata no forma parte del modelo `PlatoTipico`; el plato se mantiene dentro de `data`.
-
-## Estructura real del proyecto
-
-```text
-epn-event-manager/
-├── db/
-│   ├── events.sqlite
-│   └── platos-tipicos.sqlite
-├── frontend/
-│   ├── src/
-│   │   ├── api.js
-│   │   ├── main.js
-│   │   └── styles.css
-│   ├── index.html
-│   ├── package.json
-│   └── package-lock.json
-├── src/
-│   ├── database/
-│   │   ├── database.module.ts
-│   │   └── entities/
-│   ├── modules/
-│   │   ├── events/
-│   │   ├── health/
-│   │   ├── platos-tipicos/
-│   │   └── stats/
-│   ├── app.controller.ts
-│   ├── app.controller.spec.ts
-│   ├── app.module.ts
-│   ├── app.service.ts
-│   └── main.ts
-├── test/
-│   ├── app.e2e-spec.ts
-│   ├── platos-tipicos.e2e-spec.ts
-│   └── jest-e2e.json
-├── AGENTS.md
-├── CONTEXTO_PROYECTO.md
-├── PLAN_TDD.md
-├── README.md
-├── package.json
-└── package-lock.json
-```
-
-## Hallazgos tecnicos
-
-- El proyecto ya usa estructura `src/modules`.
-- `AppModule` importa `DatabaseModule`, `EventsModule`, `HealthModule`, `StatsModule` y `PlatosTipicosModule`.
-- `DatabaseModule` configura TypeORM con `better-sqlite3`.
-- La base actual configurada para TypeORM es `db/platos-tipicos.sqlite`.
-- Existe carpeta `db` para persistencia.
-- Existen pruebas Jest unitarias en `src` y e2e en `test`.
-- Existe `src/modules/platos-tipicos` con controller, service y DTOs.
-- Existe frontend Vite en `frontend`.
-- Existe integracion continua en `.github/workflows/node-ci.yml`.
-
-## Ubicacion del CRUD inicial
-
-El CRUD inicial de platos tipicos ecuatorianos esta creado en:
-
-```text
-src/modules/platos-tipicos
-```
-
-Se usa esta ubicacion porque el proyecto ya organiza los modulos dentro de `src/modules` y `AGENTS.md` define esa ruta para el CRUD.
-
-La persistencia usa SQLite dentro de `db/platos-tipicos.sqlite`, aprovechando la configuracion TypeORM existente.
-
-## Endpoints iniciales
-
-| Metodo | Endpoint | Descripcion |
-| --- | --- | --- |
-| `POST` | `/platos-tipicos` | Crear un plato tipico |
-| `GET` | `/platos-tipicos` | Listar platos tipicos |
-| `GET` | `/platos-tipicos/:id` | Consultar un plato tipico por ID |
-| `PATCH` | `/platos-tipicos/:id` | Actualizar un plato tipico |
-| `DELETE` | `/platos-tipicos/:id` | Eliminar un plato tipico |
-| `GET` | `/platos-tipicos/stats` | Consultar estadisticas del CRUD |
-
-Ejemplo de creacion:
-
-```json
-{
-  "nombre": "Encebollado",
-  "descripcion": "Plato tradicional de la Costa ecuatoriana preparado con pescado y yuca.",
-  "region": "Costa",
-  "ingredientes": "Pescado, yuca, cebolla, tomate, cilantro y limon",
-  "precio": 3.5,
-  "imagenUrl": "https://example.com/encebollado.jpg",
-  "categoria": "Sopa tradicional"
-}
-```
-
-```bash
-curl -X POST http://localhost:3000/platos-tipicos \
-  -H "Content-Type: application/json" \
-  -H "X-FIS-EPN-KEY: clave-de-prueba" \
-  -d "{\"nombre\":\"Encebollado\",\"descripcion\":\"Plato tradicional de la Costa ecuatoriana.\",\"region\":\"Costa\",\"ingredientes\":\"Pescado, yuca, cebolla, tomate y limon\",\"precio\":3.5,\"imagenUrl\":\"https://example.com/encebollado.jpg\",\"categoria\":\"Sopa tradicional\"}"
-```
-
-Respuesta esperada:
-
-```json
-{
-  "data": {
-    "id": 1,
-    "nombre": "Encebollado",
-    "descripcion": "Plato tradicional de la Costa ecuatoriana.",
-    "region": "Costa",
-    "ingredientes": "Pescado, yuca, cebolla, tomate y limon",
-    "precio": 3.5,
-    "imagenUrl": "https://example.com/encebollado.jpg",
-    "categoria": "Sopa tradicional"
-  },
-  "metadata": {
-    "source": "platos-tipicos-crud",
-    "system": "Sistema de Platos Típicos Ecuatorianos",
-    "apiVersion": "v1",
-    "timestampISO": "2026-06-02T01:40:00.000Z",
-    "timezone": "America/Guayaquil",
-    "environment": "development",
-    "integrationTarget": "EPN Event Manager"
-  }
-}
-```
-
-Listar platos:
-
-```bash
-curl http://localhost:3000/platos-tipicos \
-  -H "X-FIS-EPN-KEY: clave-de-prueba"
-```
-
-Consultar por id:
-
-```bash
-curl http://localhost:3000/platos-tipicos/1 \
-  -H "X-FIS-EPN-KEY: clave-de-prueba"
-```
-
-Actualizar parcialmente:
-
-```json
-{
-  "precio": 4,
-  "categoria": "Sopa"
-}
-```
-
-```bash
-curl -X PATCH http://localhost:3000/platos-tipicos/1 \
-  -H "Content-Type: application/json" \
-  -H "X-FIS-EPN-KEY: clave-de-prueba" \
-  -d "{\"precio\":4,\"categoria\":\"Sopa\"}"
-```
-
-Eliminar:
-
-```bash
-curl -X DELETE http://localhost:3000/platos-tipicos/1 \
-  -H "X-FIS-EPN-KEY: clave-de-prueba"
-```
-
-## Endpoint de estadisticas
-
-El mantenimiento perfectivo de Fase 8 agrega:
-
-```bash
-curl http://localhost:3000/platos-tipicos/stats \
-  -H "X-FIS-EPN-KEY: clave-de-prueba"
-```
-
-Respuesta esperada:
-
-```json
-{
-  "data": {
-    "totalPlatos": 2,
-    "precioPromedio": 4.625,
-    "precioMinimo": 3.5,
-    "precioMaximo": 5.75,
-    "platosPorRegion": {
-      "Costa": 1,
-      "Sierra": 1
-    },
-    "platosPorCategoria": {
-      "Sopa tradicional": 1,
-      "Sopa andina": 1
-    },
-    "generatedAt": "2026-06-02T01:45:00.000Z"
-  },
-  "metadata": {
-    "source": "platos-tipicos-crud",
-    "system": "Sistema de Platos Típicos Ecuatorianos",
-    "apiVersion": "v1",
-    "timestampISO": "2026-06-02T01:45:00.000Z",
-    "timezone": "America/Guayaquil",
-    "environment": "development",
-    "integrationTarget": "EPN Event Manager"
-  }
-}
-```
-
-No se calculan `platosDisponibles` ni `platosNoDisponibles`, porque `PlatoTipico` no tiene campo `disponible`.
-
-## Como probar persistencia
-
-1. Ejecutar el backend:
-
-```bash
-npm run start:dev
-```
-
-2. Crear un plato con `POST /platos-tipicos`.
-3. Detener el servidor.
-4. Volver a ejecutar el backend con `npm run start:dev`.
-5. Consultar:
-
-```bash
-curl http://localhost:3000/platos-tipicos \
-  -H "X-FIS-EPN-KEY: clave-de-prueba"
-```
-
-El plato creado debe seguir apareciendo porque se guarda en `db/platos-tipicos.sqlite`.
-
-Resultado de Fase 3: se creo un plato, se reinicio el backend y `GET /platos-tipicos` confirmo que el registro seguia existiendo en SQLite.
-
-## Comandos reales
-
-Instalacion:
-
-```bash
-npm install
-```
-
-Ejecucion en desarrollo:
-
-```bash
-npm run start:dev
-```
-
-Ejecucion normal:
-
-```bash
-npm run start
-```
-
-Ejecucion en produccion despues del build:
-
-```bash
-npm run start:prod
-```
-
-Pruebas unitarias:
-
-```bash
-npm test
-```
-
-Pruebas en modo watch:
-
-```bash
-npm run test:watch
-```
-
-Pruebas e2e:
-
-```bash
-npm run test:e2e
-```
-
-Resultado Fase 12:
-
-```text
-Test Suites: 2 passed, 2 total
-Tests: 24 passed, 24 total
-Estado TDD: GREEN
-```
-
-Resultado Fase 13:
-
-```text
-Frontend build: npm run build paso correctamente dentro de frontend
-Backend unit: 1 passed
-Backend e2e: 24 passed
-Estado: GREEN
-```
-
-Resultado Fase 14:
-
-```text
-Backend npm ci: paso
-Backend lint: paso
-Backend test: 1 passed
-Backend build: paso
-Frontend npm ci: paso
-Frontend build: paso
-Estado CI: configurado
-```
-
-Resultado Fase 15:
-
-```text
-Evidencia manual creada en docs/PRUEBAS_MANUALES_API.md
-Incluye X-FIS-EPN-KEY y escenarios CRUD, seguridad, validacion y persistencia
-```
-
-Cobertura:
-
-```bash
-npm run test:cov
-```
-
-Build:
-
-```bash
-npm run build
-```
-
-Lint:
-
-```bash
-npm run lint
-```
-
-Formato:
-
-```bash
-npm run format
-```
-
-## TDD
-
-Los mantenimientos del examen se realizaran con TDD:
-
-1. RED: crear una prueba que falle.
-2. GREEN: implementar el codigo minimo para que pase.
-3. REFACTOR: mejorar sin cambiar el comportamiento.
-
-El plan de pruebas se mantiene en `PLAN_TDD.md`.
-
-## Fases del proyecto
+## Fases
 
 | Fase | Descripcion | Estado |
 | --- | --- | --- |
-| Fase 0 | Documentacion base y contexto real | Completada |
+| Fase 0 | Documentacion base | Completada |
 | Fase 1 | Revision de estructura real | Completada |
-| Fase 2 | Crear CRUD inicial persistente | Completada |
-| Fase 3 | Probar CRUD inicial y persistencia | Completada |
+| Fase 2 | CRUD inicial persistente | Completada |
+| Fase 3 | Prueba de CRUD y persistencia | Completada |
 | Fase 4 | Diagnostico de deuda tecnica | Completada |
-| Fase 5 | Crear pruebas TDD base del CRUD inicial | Completada |
+| Fase 5 | Pruebas TDD base | Completada |
 | Fase 6 | Mantenimiento correctivo | Completada |
 | Fase 7 | Mantenimiento adaptativo | Completada |
 | Fase 8 | Mantenimiento perfectivo | Completada |
@@ -608,17 +368,7 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 10 | Seguridad por API Key | Completada |
 | Fase 11 | Logs y trazabilidad | Completada |
 | Fase 12 | Swagger / OpenAPI | Completada |
-| Fase 13 | Frontend con Node.js y Vite | Completada |
-| Fase 14 | GitHub Actions para backend y frontend | Completada |
-| Fase 15 | Coleccion o pruebas manuales de API | Completada |
-| Fase 16 | Documentacion final | Pendiente |
-
-## Git
-
-Rama de trabajo:
-
-```bash
-desarrollo
-```
-
-Despues de cada fase se debe registrar el cambio en la rama `desarrollo`.
+| Fase 13 | Frontend Node.js | Completada |
+| Fase 14 | GitHub Actions | Completada |
+| Fase 15 | Pruebas manuales API | Completada |
+| Fase 16 | Documentacion final | Completada |
