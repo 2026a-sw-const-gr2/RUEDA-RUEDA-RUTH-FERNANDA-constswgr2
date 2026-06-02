@@ -271,3 +271,25 @@ El cambio mejora la observabilidad sin agregar dependencias pesadas y permite re
 ### Impacto
 
 El CRUD queda trazable para operaciones exitosas, errores controlados, API Key y validaciones. Las pruebas quedaron en GREEN con 23 pruebas e2e pasando.
+
+## Actualizacion Fase 12: Swagger / OpenAPI
+
+### Antes
+
+No existia documentacion interactiva de la API. Los endpoints, DTOs, errores y la cabecera `X-FIS-EPN-KEY` debian revisarse manualmente en codigo o README.
+
+### Prueba de documentacion
+
+Se agrego una prueba e2e para confirmar que `/api/docs` responde correctamente.
+
+### Despues
+
+Swagger se configura desde `src/swagger.ts` y se expone en `/api/docs`. Los DTOs y el controller de platos tipicos incluyen decoradores OpenAPI para endpoints, parametros, cuerpos, errores y API Key.
+
+### Justificacion
+
+El cambio mejora la mantenibilidad y la integracion sin modificar la logica del CRUD.
+
+### Impacto
+
+La API queda documentada y las pruebas quedaron en GREEN con 24 pruebas e2e pasando.

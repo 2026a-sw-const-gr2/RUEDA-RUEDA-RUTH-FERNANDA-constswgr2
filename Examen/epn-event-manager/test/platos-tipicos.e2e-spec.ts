@@ -2,6 +2,7 @@ import { INestApplication, Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import supertest from 'supertest';
 import { AppModule } from './../src/app.module';
+import { setupSwagger } from './../src/swagger';
 
 describe('PlatosTipicosController (e2e)', () => {
   let app: INestApplication;
@@ -16,6 +17,7 @@ describe('PlatosTipicosController (e2e)', () => {
     }).compile();
 
     const nestApp = moduleFixture.createNestApplication();
+    setupSwagger(nestApp);
     await nestApp.init();
     return nestApp;
   };
@@ -93,6 +95,12 @@ describe('PlatosTipicosController (e2e)', () => {
   it('permite health sin API Key', async () => {
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .get('/health')
+      .expect(200);
+  });
+
+  it('expone documentacion Swagger en /api/docs', async () => {
+    await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+      .get('/api/docs')
       .expect(200);
   });
 

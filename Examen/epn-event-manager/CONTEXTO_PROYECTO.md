@@ -52,6 +52,27 @@ No son campos obligatorios del recurso: `provincia`, `disponible`, `createdAt`, 
 
 Los timestamps ISO 8601 se usaran solo en logs, metadata adaptativa o auditoria cuando una fase lo solicite.
 
+## Frontend
+
+El frontend será creado con Node.js usando Vite y JavaScript.
+
+Ubicación:
+
+frontend/
+
+Objetivo:
+
+Crear un hub visual para platos típicos ecuatorianos que permita:
+
+- listar platos típicos
+- mostrar tarjetas con imagen, nombre, descripción, región, ingredientes, precio y categoría
+- crear platos típicos
+- ver detalle
+- editar
+- eliminar
+- visualizar estadísticas
+- consumir la API protegida con X-FIS-EPN-KEY
+
 ## Estructura real revisada en Fase 1
 
 - `src`: codigo fuente NestJS.
@@ -342,6 +363,36 @@ Impacto:
 - Las pruebas del backend se mantienen en GREEN.
 - Estado TDD Fase 11: GREEN.
 
+## Swagger / OpenAPI Fase 12
+
+En Fase 12 se documento la API usando Swagger/OpenAPI.
+
+Antes:
+
+- No existia documentacion interactiva de endpoints.
+- Los DTOs no tenian metadata para OpenAPI.
+- La cabecera `X-FIS-EPN-KEY` no estaba documentada en Swagger.
+
+Despues:
+
+- Se agrego `src/swagger.ts`.
+- `main.ts` configura Swagger al iniciar la aplicacion.
+- La documentacion queda disponible en `/api/docs`.
+- `CreatePlatoTipicoDto` y `UpdatePlatoTipicoDto` tienen decoradores Swagger.
+- `PlatosTipicosController` documenta endpoints, parametros, body, errores y API Key.
+- Se agrego prueba e2e para confirmar disponibilidad de `/api/docs`.
+
+Justificacion:
+
+- El cambio facilita probar e integrar la API sin modificar la logica del CRUD.
+
+Impacto:
+
+- La API queda documentada con OpenAPI.
+- La cabecera `X-FIS-EPN-KEY` queda visible para consumo seguro.
+- Las pruebas del backend se mantienen en GREEN con 24 pruebas e2e.
+- Estado TDD Fase 12: GREEN.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -414,4 +465,5 @@ npm run format
 | Fase 9 | Aplicar mantenimiento preventivo | Completada |
 | Fase 10 | Agregar seguridad por API Key | Completada |
 | Fase 11 | Agregar logs y trazabilidad | Completada |
-| Fase 12 | Agregar Swagger, GitHub Actions, frontend y documentacion final | Pendiente |
+| Fase 12 | Agregar Swagger / OpenAPI | Completada |
+| Fase 13 | Agregar frontend, GitHub Actions y documentacion final | Pendiente |

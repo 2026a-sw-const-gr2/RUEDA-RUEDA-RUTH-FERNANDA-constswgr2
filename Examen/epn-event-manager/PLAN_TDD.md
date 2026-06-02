@@ -224,6 +224,26 @@ Resultado documentado:
 - `npm run test:e2e`: 2 suites pasaron, 23 pruebas pasaron.
 - La evidencia manual se obtiene observando la consola con `npm run start:dev`.
 
+## Pruebas de Swagger / OpenAPI
+
+- [x] Configura Swagger en el backend.
+- [x] Expone documentacion en `/api/docs`.
+- [x] Documenta endpoints del CRUD de platos tipicos.
+- [x] Documenta `GET /platos-tipicos/stats`.
+- [x] Documenta DTOs de creacion y actualizacion.
+- [x] Documenta errores `400`, `401` y `404`.
+- [x] Documenta cabecera `X-FIS-EPN-KEY`.
+- [x] Mantiene pruebas del CRUD pasando.
+
+Estado TDD Fase 12: GREEN.
+
+Resultado documentado:
+
+- `npm run build`: paso correctamente.
+- `npm test`: 1 suite paso, 1 prueba paso.
+- `npm run test:e2e`: 2 suites pasaron, 24 pruebas pasaron.
+- La evidencia manual se obtiene abriendo `http://localhost:3000/api/docs`.
+
 ## Diagnostico Fase 4
 
 La Fase 4 no corrige codigo. Registra la deuda tecnica en:
@@ -233,18 +253,20 @@ La Fase 4 no corrige codigo. Registra la deuda tecnica en:
 
 Las pruebas de las siguientes fases deben nacer de ese diagnostico y seguir RED, GREEN, REFACTOR.
 
-## Checklist manual futuro de frontend
+## Checklist manual del frontend con Node.js
 
-- Lista platos tipicos.
-- Muestra imagen.
-- Muestra nombre.
-- Muestra descripcion.
-- Muestra region.
-- Muestra ingredientes.
-- Muestra precio.
-- Muestra categoria.
-- Permite crear.
-- Permite ver detalle.
-- Permite editar.
-- Permite eliminar.
-- Muestra estadisticas cuando existan.
+El frontend debe validarse manualmente o con pruebas si se configura entorno frontend.
+
+Checklist:
+
+- El frontend inicia con npm run dev.
+- El frontend consume GET /platos-tipicos.
+- Muestra tarjetas de platos típicos.
+- Muestra imagen, nombre, descripción, región, ingredientes, precio y categoría.
+- Permite crear un plato típico.
+- Permite ver un plato típico.
+- Permite editar un plato típico.
+- Permite eliminar un plato típico.
+- Muestra estadísticas desde GET /platos-tipicos/stats.
+- Envía la cabecera X-FIS-EPN-KEY.
+- Muestra errores si el backend no responde.

@@ -47,6 +47,12 @@ Clasificacion inicial de deuda tecnica detectada en el CRUD persistente de plato
 | --- | --- | --- | --- |
 | El CRUD no registraba operaciones, errores, intentos fallidos ni validaciones con una estructura consistente. | Se agregaron logs JSON con `level`, `timestampISO`, `route`, `action`, `platoId` y `message` usando `Logger` de NestJS. | Es preventivo porque mejora la observabilidad y permite diagnosticar fallos futuros sin agregar dependencias pesadas. | Mayor trazabilidad de CREATE, READ, UPDATE, DELETE, API Key y validaciones; pruebas e2e verifican los logs principales. |
 
+## Swagger / OpenAPI aplicado en Fase 12
+
+| Antes | Despues | Justificacion | Impacto |
+| --- | --- | --- | --- |
+| No habia documentacion interactiva para endpoints, DTOs, errores ni cabecera de seguridad. | Se configuro Swagger en `/api/docs`, se documentaron DTOs, endpoints, respuestas de error y `X-FIS-EPN-KEY`. | Es preventivo y perfectivo porque reduce errores de integracion y mejora la experiencia de prueba de la API. | API mas facil de consumir, probar y revisar durante el examen sin cambiar la logica del CRUD. |
+
 ## Orden sugerido
 
 1. Ampliar pruebas del CRUD y errores.

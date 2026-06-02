@@ -8,11 +8,29 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 11 completada: se agregaron logs estructurados y trazabilidad para el CRUD.
+Fase 12 completada: se documento la API con Swagger/OpenAPI.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
-No existe frontend, Swagger ni GitHub Actions en esta fase.
+No existe frontend ni GitHub Actions en esta fase.
+
+## Swagger / OpenAPI
+
+La documentacion interactiva de la API esta disponible en:
+
+```text
+http://localhost:3000/api/docs
+```
+
+Swagger documenta:
+
+- Endpoints del CRUD de platos tipicos.
+- Endpoint `GET /platos-tipicos/stats`.
+- DTOs de creacion y actualizacion.
+- Respuestas de error `400`, `401` y `404`.
+- Cabecera de seguridad `X-FIS-EPN-KEY`.
+
+Para probar endpoints protegidos desde Swagger, usar la autorizacion `X-FIS-EPN-KEY` con el valor configurado en `FIS_EPN_API_KEY`.
 
 ## Seguridad por API Key
 
@@ -396,11 +414,11 @@ Pruebas e2e:
 npm run test:e2e
 ```
 
-Resultado Fase 11:
+Resultado Fase 12:
 
 ```text
 Test Suites: 2 passed, 2 total
-Tests: 23 passed, 23 total
+Tests: 24 passed, 24 total
 Estado TDD: GREEN
 ```
 
@@ -454,7 +472,8 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 9 | Mantenimiento preventivo | Completada |
 | Fase 10 | Seguridad por API Key | Completada |
 | Fase 11 | Logs y trazabilidad | Completada |
-| Fase 12 | Swagger, GitHub Actions, frontend y documentacion final | Pendiente |
+| Fase 12 | Swagger / OpenAPI | Completada |
+| Fase 13 | Frontend, GitHub Actions y documentacion final | Pendiente |
 
 ## Git
 
