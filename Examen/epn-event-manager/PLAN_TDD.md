@@ -96,6 +96,9 @@ Pruebas pendientes para ampliar cobertura del CRUD inicial:
 - `DELETE /platos-tipicos/:id` elimina realmente en SQLite.
 - `DELETE /platos-tipicos/:id` con id inexistente devuelve error controlado.
 - No se retorna exito falso en operaciones fallidas.
+- `GET /platos-tipicos/:id` con id inexistente devuelve 404.
+- `PATCH /platos-tipicos/:id` con id inexistente devuelve 404.
+- `PATCH /platos-tipicos/:id` con datos invalidos devuelve 400.
 
 ## Pruebas de mantenimiento adaptativo
 
@@ -104,6 +107,7 @@ Pruebas pendientes para ampliar cobertura del CRUD inicial:
 - DELETE genera metadata adaptativa cuando la fase lo solicite.
 - QUERY genera metadata adaptativa cuando la fase lo solicite.
 - `timestampISO` tiene formato ISO 8601 solo como metadata, log o auditoria, no como campo obligatorio de `PlatoTipico`.
+- Las respuestas mantienen los campos oficiales de `PlatoTipico` separados de la metadata.
 
 ## Pruebas de mantenimiento perfectivo
 
@@ -113,12 +117,27 @@ Pruebas pendientes para ampliar cobertura del CRUD inicial:
 - Calcula precio maximo.
 - Agrupa platos por region.
 - Agrupa platos por categoria.
+- Endpoint de estadisticas responde correctamente cuando no hay platos.
 
 ## Pruebas de mantenimiento preventivo
 
 - Rechaza texto con `<script>`.
 - Rechaza patrones peligrosos como `SELECT`, `DROP`, `INSERT` o `--` cuando la fase preventiva lo solicite.
 - Rechaza textos demasiado largos cuando se definan limites.
+- Rechaza campos con solo espacios en blanco.
+- Rechaza `imagenUrl` sin formato URL.
+- Rechaza acceso sin API Key cuando se implemente seguridad.
+- Rechaza acceso con API Key incorrecta cuando se implemente seguridad.
+- Registra logs estructurados para creacion, consulta, actualizacion, eliminacion y errores.
+
+## Diagnostico Fase 4
+
+La Fase 4 no corrige codigo. Registra la deuda tecnica en:
+
+- `docs/DIAGNOSTICO_DEUDA_TECNICA.md`
+- `docs/TABLA_MANTENIMIENTO.md`
+
+Las pruebas de las siguientes fases deben nacer de ese diagnostico y seguir RED, GREEN, REFACTOR.
 
 ## Checklist manual futuro de frontend
 

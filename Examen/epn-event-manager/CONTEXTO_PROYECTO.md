@@ -118,6 +118,28 @@ En Fase 3 tambien se ejecuto una prueba funcional manual contra `http://localhos
 
 Resultado: el proyecto base persistente esta listo para iniciar el diagnostico de deuda tecnica y las fases de mantenimiento.
 
+## Diagnostico de deuda tecnica Fase 4
+
+En Fase 4 se diagnostico el CRUD inicial persistente sin modificar su comportamiento. Se identificaron deudas en:
+
+- pruebas insuficientes para todos los endpoints y errores;
+- validaciones robustas pendientes en DTOs;
+- ausencia de API Key;
+- ausencia de logs estructurados;
+- ausencia de trazabilidad;
+- ausencia de metadata adaptativa;
+- ausencia de Swagger;
+- ausencia de endpoint de estadisticas;
+- falta de sanitizacion de textos;
+- manejo de errores incompleto;
+- riesgos con textos maliciosos;
+- riesgos con precio negativo, campos vacios o campos con solo espacios.
+
+Documentos creados:
+
+- `docs/DIAGNOSTICO_DEUDA_TECNICA.md`
+- `docs/TABLA_MANTENIMIENTO.md`
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -182,6 +204,6 @@ npm run format
 | Fase 1 | Revisar estructura real del proyecto y decidir ubicacion del CRUD | Completada |
 | Fase 2 | Crear CRUD inicial persistente de platos tipicos ecuatorianos | Completada |
 | Fase 3 | Probar CRUD inicial y persistencia | Completada |
-| Fase 4 | Diagnosticar deuda tecnica del CRUD inicial | Pendiente |
+| Fase 4 | Diagnosticar deuda tecnica del CRUD inicial | Completada |
 | Fase 5 | Aplicar mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
 | Fase 6 | Agregar pruebas, logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
