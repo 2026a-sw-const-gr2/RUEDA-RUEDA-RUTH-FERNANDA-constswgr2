@@ -217,3 +217,30 @@ Este cambio es preventivo porque evita errores futuros, datos inconsistentes y e
 ### Impacto
 
 El CRUD rechaza datos invalidos y las pruebas quedaron en GREEN con 19 pruebas e2e pasando.
+
+## Actualizacion Fase 10: seguridad por API Key
+
+### Antes
+
+Los endpoints del CRUD estaban abiertos y no validaban la cabecera `X-FIS-EPN-KEY`.
+
+### Prueba de seguridad
+
+Se agregaron pruebas e2e para confirmar:
+
+- `GET /health` funciona sin API Key.
+- El CRUD responde 401 sin API Key.
+- El CRUD responde 401 con API Key incorrecta.
+- El CRUD permite acceso con API Key correcta.
+
+### Despues
+
+`PlatosTipicosController` esta protegido con `ApiKeyGuard`. La clave esperada se lee desde `process.env.FIS_EPN_API_KEY`.
+
+### Justificacion
+
+El cambio agrega seguridad basica configurable por entorno y mantiene libre el endpoint de salud.
+
+### Impacto
+
+El CRUD queda protegido contra accesos sin clave. Las pruebas quedaron en GREEN con 23 pruebas e2e pasando.

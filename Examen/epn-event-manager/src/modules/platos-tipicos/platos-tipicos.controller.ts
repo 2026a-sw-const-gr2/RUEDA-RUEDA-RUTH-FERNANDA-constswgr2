@@ -7,12 +7,15 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { ApiKeyGuard } from './api-key.guard';
 import { CreatePlatoTipicoDto } from './dto/create-plato-tipico.dto';
 import { UpdatePlatoTipicoDto } from './dto/update-plato-tipico.dto';
 import { PlatosTipicosService } from './platos-tipicos.service';
 
 @Controller('platos-tipicos')
+@UseGuards(ApiKeyGuard)
 export class PlatosTipicosController {
   constructor(private readonly platosTipicosService: PlatosTipicosService) {}
 

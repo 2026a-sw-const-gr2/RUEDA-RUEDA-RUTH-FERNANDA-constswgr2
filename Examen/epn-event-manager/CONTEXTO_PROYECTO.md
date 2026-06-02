@@ -283,6 +283,36 @@ Impacto:
 - Las pruebas preventivas quedan automatizadas.
 - Estado TDD Fase 9: RED confirmado por fallos de validacion; GREEN confirmado despues de implementar.
 
+## Seguridad por API Key Fase 10
+
+En Fase 10 se agrego seguridad por API Key para proteger los endpoints del CRUD.
+
+Antes:
+
+- Los endpoints de `platos-tipicos` estaban abiertos.
+- No se validaba la cabecera `X-FIS-EPN-KEY`.
+- No existia `.env.example`.
+
+Despues:
+
+- Se creo `.env.example` con `FIS_EPN_API_KEY`.
+- Se agrego `ApiKeyGuard` en `src/modules/platos-tipicos/api-key.guard.ts`.
+- `PlatosTipicosController` usa `@UseGuards(ApiKeyGuard)`.
+- Los endpoints del CRUD devuelven 401 si falta la cabecera o si la clave es incorrecta.
+- Los endpoints del CRUD funcionan con `X-FIS-EPN-KEY` correcta.
+- `GET /health` queda permitido sin API Key.
+- No se creo ni se subio `.env` real.
+
+Justificacion:
+
+- El cambio protege operaciones de creacion, consulta, actualizacion y eliminacion sin bloquear health checks.
+
+Impacto:
+
+- El CRUD queda protegido por una clave configurable desde entorno.
+- Las pruebas de seguridad quedan automatizadas.
+- Estado TDD Fase 10: RED confirmado por acceso sin clave; GREEN confirmado despues de implementar.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -353,4 +383,5 @@ npm run format
 | Fase 7 | Aplicar mantenimiento adaptativo | Completada |
 | Fase 8 | Aplicar mantenimiento perfectivo | Completada |
 | Fase 9 | Aplicar mantenimiento preventivo | Completada |
-| Fase 10 | Agregar logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
+| Fase 10 | Agregar seguridad por API Key | Completada |
+| Fase 11 | Agregar logs, Swagger, GitHub Actions y documentacion final | Pendiente |

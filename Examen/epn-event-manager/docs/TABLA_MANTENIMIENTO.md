@@ -35,6 +35,12 @@ Clasificacion inicial de deuda tecnica detectada en el CRUD persistente de plato
 | --- | --- | --- | --- |
 | El CRUD aceptaba textos con espacios, URL invalida, patrones maliciosos, `<script>` y textos demasiado largos. | Se agregaron validaciones de campos obligatorios, longitudes, precio, URL, `trim` y bloqueo de patrones peligrosos. | Es preventivo porque reduce fallos futuros, datos invalidos y riesgos por entradas maliciosas antes de persistir en SQLite. | Mayor calidad de datos, menor riesgo de contenido peligroso y pruebas automatizadas para entradas invalidas. |
 
+## Seguridad por API Key aplicada en Fase 10
+
+| Antes | Despues | Justificacion | Impacto |
+| --- | --- | --- | --- |
+| Los endpoints del CRUD estaban abiertos y no validaban `X-FIS-EPN-KEY`. | Se agrego `ApiKeyGuard`, se lee `FIS_EPN_API_KEY` desde entorno, se protege `PlatosTipicosController` y `GET /health` queda libre. | La API Key reduce accesos no autorizados a operaciones del CRUD sin bloquear health checks. | Mayor seguridad basica, pruebas automatizadas de 401 y configuracion documentada en `.env.example`. |
+
 ## Orden sugerido
 
 1. Ampliar pruebas del CRUD y errores.

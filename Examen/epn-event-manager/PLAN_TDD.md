@@ -180,8 +180,6 @@ Resultado documentado:
 - [x] Rechaza patrones peligrosos como `SELECT`, `DROP`, `INSERT` o `--`.
 - [x] Rechaza textos demasiado largos.
 - [x] Aplica `trim` a textos antes de guardar.
-- Rechaza acceso sin API Key cuando se implemente seguridad.
-- Rechaza acceso con API Key incorrecta cuando se implemente seguridad.
 - Registra logs estructurados para creacion, consulta, actualizacion, eliminacion y errores.
 
 Estado TDD Fase 9: RED -> GREEN.
@@ -190,6 +188,23 @@ Resultado documentado:
 
 - RED: `npm run test:e2e` fallo porque se aceptaban espacios, URL invalida, `<script>`, patrones SQL, textos largos y textos sin trim.
 - GREEN: `npm run test:e2e` paso con 2 suites y 19 pruebas.
+- `npm test`: 1 suite paso, 1 prueba paso.
+- `npm run build`: paso correctamente.
+
+## Pruebas de seguridad por API Key
+
+- [x] Permite `GET /health` sin API Key.
+- [x] Rechaza endpoints del CRUD sin `X-FIS-EPN-KEY`.
+- [x] Rechaza endpoints del CRUD con API Key incorrecta.
+- [x] Permite endpoints del CRUD con API Key correcta.
+- [x] La clave se lee desde `FIS_EPN_API_KEY`.
+
+Estado TDD Fase 10: RED -> GREEN.
+
+Resultado documentado:
+
+- RED: `npm run test:e2e` fallo porque sin API Key e incorrecta devolvian 200.
+- GREEN: `npm run test:e2e` paso con 2 suites y 23 pruebas.
 - `npm test`: 1 suite paso, 1 prueba paso.
 - `npm run build`: paso correctamente.
 

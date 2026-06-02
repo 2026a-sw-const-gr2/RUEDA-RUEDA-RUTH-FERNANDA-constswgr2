@@ -8,11 +8,44 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 9 completada: se aplico mantenimiento preventivo para rechazar datos invalidos y entradas maliciosas.
+Fase 10 completada: se agrego seguridad por API Key usando la cabecera `X-FIS-EPN-KEY`.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
-No existe frontend, API Key, Swagger ni GitHub Actions en esta fase.
+No existe frontend, Swagger ni GitHub Actions en esta fase.
+
+## Seguridad por API Key
+
+Los endpoints del CRUD de platos tipicos requieren la cabecera:
+
+```text
+X-FIS-EPN-KEY
+```
+
+La clave se lee desde la variable de entorno:
+
+```text
+FIS_EPN_API_KEY
+```
+
+Existe un archivo de ejemplo que si se puede versionar:
+
+```text
+.env.example
+```
+
+No se debe subir `.env` real.
+
+Ejemplo:
+
+```bash
+curl http://localhost:3000/platos-tipicos \
+  -H "X-FIS-EPN-KEY: clave-de-prueba"
+```
+
+Sin API Key o con una API Key incorrecta, el CRUD responde `401 Unauthorized`.
+
+El endpoint `GET /health` queda libre para verificacion basica del servicio.
 
 ## Recurso principal
 
@@ -157,6 +190,7 @@ Ejemplo de creacion:
 ```bash
 curl -X POST http://localhost:3000/platos-tipicos \
   -H "Content-Type: application/json" \
+  -H "X-FIS-EPN-KEY: clave-de-prueba" \
   -d "{\"nombre\":\"Encebollado\",\"descripcion\":\"Plato tradicional de la Costa ecuatoriana.\",\"region\":\"Costa\",\"ingredientes\":\"Pescado, yuca, cebolla, tomate y limon\",\"precio\":3.5,\"imagenUrl\":\"https://example.com/encebollado.jpg\",\"categoria\":\"Sopa tradicional\"}"
 ```
 
@@ -189,13 +223,15 @@ Respuesta esperada:
 Listar platos:
 
 ```bash
-curl http://localhost:3000/platos-tipicos
+curl http://localhost:3000/platos-tipicos \
+  -H "X-FIS-EPN-KEY: clave-de-prueba"
 ```
 
 Consultar por id:
 
 ```bash
-curl http://localhost:3000/platos-tipicos/1
+curl http://localhost:3000/platos-tipicos/1 \
+  -H "X-FIS-EPN-KEY: clave-de-prueba"
 ```
 
 Actualizar parcialmente:
@@ -210,13 +246,15 @@ Actualizar parcialmente:
 ```bash
 curl -X PATCH http://localhost:3000/platos-tipicos/1 \
   -H "Content-Type: application/json" \
+  -H "X-FIS-EPN-KEY: clave-de-prueba" \
   -d "{\"precio\":4,\"categoria\":\"Sopa\"}"
 ```
 
 Eliminar:
 
 ```bash
-curl -X DELETE http://localhost:3000/platos-tipicos/1
+curl -X DELETE http://localhost:3000/platos-tipicos/1 \
+  -H "X-FIS-EPN-KEY: clave-de-prueba"
 ```
 
 ## Endpoint de estadisticas
@@ -224,7 +262,8 @@ curl -X DELETE http://localhost:3000/platos-tipicos/1
 El mantenimiento perfectivo de Fase 8 agrega:
 
 ```bash
-curl http://localhost:3000/platos-tipicos/stats
+curl http://localhost:3000/platos-tipicos/stats \
+  -H "X-FIS-EPN-KEY: clave-de-prueba"
 ```
 
 Respuesta esperada:
@@ -325,11 +364,11 @@ Pruebas e2e:
 npm run test:e2e
 ```
 
-Resultado Fase 9:
+Resultado Fase 10:
 
 ```text
 Test Suites: 2 passed, 2 total
-Tests: 19 passed, 19 total
+Tests: 23 passed, 23 total
 Estado TDD: GREEN
 ```
 
@@ -381,7 +420,8 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 7 | Mantenimiento adaptativo | Completada |
 | Fase 8 | Mantenimiento perfectivo | Completada |
 | Fase 9 | Mantenimiento preventivo | Completada |
-| Fase 10 | Logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
+| Fase 10 | Seguridad por API Key | Completada |
+| Fase 11 | Logs, Swagger, GitHub Actions y documentacion final | Pendiente |
 
 ## Git
 

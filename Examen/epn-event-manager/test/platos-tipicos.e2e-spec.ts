@@ -7,8 +7,10 @@ describe('PlatosTipicosController (e2e)', () => {
   let app: INestApplication;
   const createdIds: number[] = [];
   const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+  const apiKey = 'clave-e2e';
 
   const createApp = async (): Promise<INestApplication> => {
+    process.env.FIS_EPN_API_KEY = apiKey;
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -26,6 +28,7 @@ describe('PlatosTipicosController (e2e)', () => {
     for (const id of createdIds.splice(0)) {
       await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
         .delete(`/platos-tipicos/${id}`)
+        .set('X-FIS-EPN-KEY', apiKey)
         .catch(() => undefined);
     }
 
@@ -47,6 +50,7 @@ describe('PlatosTipicosController (e2e)', () => {
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
       .post('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', apiKey)
       .send(platoPayload(nombre))
       .expect(201);
 
@@ -67,6 +71,32 @@ describe('PlatosTipicosController (e2e)', () => {
     });
     expect(body.metadata?.timestampISO).toMatch(isoRegex);
   };
+
+  it('permite health sin API Key', async () => {
+    await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+      .get('/health')
+      .expect(200);
+  });
+
+  it('devuelve 401 si falta API Key en endpoints del CRUD', async () => {
+    await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+      .get('/platos-tipicos')
+      .expect(401);
+  });
+
+  it('devuelve 401 si API Key es incorrecta', async () => {
+    await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+      .get('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', 'clave-incorrecta')
+      .expect(401);
+  });
+
+  it('permite acceder con API Key correcta', async () => {
+    await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+      .get('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', apiKey)
+      .expect(200);
+  });
 
   it('crea un plato tipico', async () => {
     const nombre = `Encebollado Crear ${Date.now()}`;
@@ -91,6 +121,7 @@ describe('PlatosTipicosController (e2e)', () => {
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
       .get('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(200);
 
     expect(listResponse.body.data).toEqual(
@@ -112,6 +143,7 @@ describe('PlatosTipicosController (e2e)', () => {
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
       .get(`/platos-tipicos/${createResponse.body.data.id}`)
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(200);
 
     expect(getResponse.body).toMatchObject({
@@ -126,6 +158,7 @@ describe('PlatosTipicosController (e2e)', () => {
   it('devuelve 404 al consultar un plato tipico inexistente', async () => {
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .get('/platos-tipicos/99999999')
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(404);
   });
 
@@ -136,6 +169,7 @@ describe('PlatosTipicosController (e2e)', () => {
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
       .post('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', apiKey)
       .send({
         ...platoPayload(`Locro Stats Sierra ${Date.now()}`),
         region: 'Sierra',
@@ -149,6 +183,7 @@ describe('PlatosTipicosController (e2e)', () => {
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
       .get('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(200);
     const platos = listResponse.body.data as Array<{
       precio: number;
@@ -167,6 +202,7 @@ describe('PlatosTipicosController (e2e)', () => {
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
       .get('/platos-tipicos/stats')
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(200);
 
     expect(statsResponse.body.data).toMatchObject({
@@ -200,6 +236,7 @@ describe('PlatosTipicosController (e2e)', () => {
     for (const invalidPart of invalidPayloads) {
       await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
         .post('/platos-tipicos')
+        .set('X-FIS-EPN-KEY', apiKey)
         .send({
           ...platoPayload(`Validacion Vacio ${Date.now()}`),
           ...invalidPart,
@@ -211,6 +248,7 @@ describe('PlatosTipicosController (e2e)', () => {
   it('rechaza precio negativo', async () => {
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .post('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', apiKey)
       .send({
         ...platoPayload(`Validacion Precio ${Date.now()}`),
         precio: -1,
@@ -221,6 +259,7 @@ describe('PlatosTipicosController (e2e)', () => {
   it('rechaza imagenUrl invalida', async () => {
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .post('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', apiKey)
       .send({
         ...platoPayload(`Validacion Url ${Date.now()}`),
         imagenUrl: 'imagen-local',
@@ -231,6 +270,7 @@ describe('PlatosTipicosController (e2e)', () => {
   it('rechaza texto con script', async () => {
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .post('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', apiKey)
       .send({
         ...platoPayload(`Validacion Script ${Date.now()}`),
         descripcion: 'Descripcion con <script>alert(1)</script>',
@@ -249,6 +289,7 @@ describe('PlatosTipicosController (e2e)', () => {
     for (const invalidPart of sqlPayloads) {
       await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
         .post('/platos-tipicos')
+        .set('X-FIS-EPN-KEY', apiKey)
         .send({
           ...platoPayload(`Validacion SQL ${Date.now()}`),
           ...invalidPart,
@@ -267,6 +308,7 @@ describe('PlatosTipicosController (e2e)', () => {
     for (const invalidPart of longPayloads) {
       await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
         .post('/platos-tipicos')
+        .set('X-FIS-EPN-KEY', apiKey)
         .send({
           ...platoPayload(`Validacion Largo ${Date.now()}`),
           ...invalidPart,
@@ -280,6 +322,7 @@ describe('PlatosTipicosController (e2e)', () => {
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
       .post('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', apiKey)
       .send({
         ...platoPayload(`  Encebollado Trim ${Date.now()}  `),
         region: '  Costa  ',
@@ -304,6 +347,7 @@ describe('PlatosTipicosController (e2e)', () => {
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
       .patch(`/platos-tipicos/${createResponse.body.data.id}`)
+      .set('X-FIS-EPN-KEY', apiKey)
       .send({
         precio: 4.25,
         categoria: 'Sopa actualizada',
@@ -324,6 +368,7 @@ describe('PlatosTipicosController (e2e)', () => {
   it('devuelve 404 al actualizar un plato tipico inexistente', async () => {
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .patch('/platos-tipicos/99999999')
+      .set('X-FIS-EPN-KEY', apiKey)
       .send({ precio: 4.25 })
       .expect(404);
   });
@@ -336,6 +381,7 @@ describe('PlatosTipicosController (e2e)', () => {
 
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .delete(`/platos-tipicos/${id}`)
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(200)
       .expect((response) => {
         expect(response.body).toMatchObject({
@@ -346,6 +392,7 @@ describe('PlatosTipicosController (e2e)', () => {
 
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .get(`/platos-tipicos/${id}`)
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(404);
   });
 
@@ -354,6 +401,7 @@ describe('PlatosTipicosController (e2e)', () => {
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
       .delete('/platos-tipicos/99999999')
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(404);
 
     expect(response.body).not.toMatchObject({
@@ -370,6 +418,7 @@ describe('PlatosTipicosController (e2e)', () => {
 
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .delete(`/platos-tipicos/${id}`)
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(200)
       .expect((response) => {
         expect(response.body).toMatchObject({
@@ -383,6 +432,7 @@ describe('PlatosTipicosController (e2e)', () => {
 
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .get(`/platos-tipicos/${id}`)
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(404);
   });
 
@@ -397,6 +447,7 @@ describe('PlatosTipicosController (e2e)', () => {
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
       .get('/platos-tipicos')
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(200);
 
     expect(listResponse.body.data).toEqual(
@@ -411,6 +462,7 @@ describe('PlatosTipicosController (e2e)', () => {
 
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .delete(`/platos-tipicos/${createResponse.body.data.id}`)
+      .set('X-FIS-EPN-KEY', apiKey)
       .expect(200);
   });
 });
