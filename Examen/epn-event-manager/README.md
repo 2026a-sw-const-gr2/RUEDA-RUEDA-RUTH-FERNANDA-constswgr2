@@ -1,98 +1,61 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+﻿# EPN Event Manager
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Descripcion general
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Proyecto de examen construido con Node.js para el mantenimiento de platos tipicos ecuatorianos. El sistema se desarrollara usando TDD, una interfaz web y, en fases posteriores, automatizacion con GitHub Actions.
 
-## Description
+El proyecto parte desde una base inicial y evolucionara por fases. En esta Fase 0 solo se crea la documentacion base del proyecto.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Recurso principal
 
-## Project setup
+El recurso principal del sistema es `PlatoTipico`, que representa un plato tipico ecuatoriano registrado para mantenimiento.
 
-```bash
-$ npm install
-```
+## Campos de PlatoTipico
 
-## Compile and run the project
+- `id`: identificador unico del plato tipico.
+- `nombre`: nombre del plato tipico ecuatoriano.
+- `descripcion`: descripcion breve del plato.
+- `region`: region del Ecuador a la que pertenece o con la que se asocia.
+- `ingredientes`: lista o descripcion de ingredientes principales.
+- `precio`: precio referencial del plato.
+- `imagenUrl`: URL de una imagen representativa.
+- `categoria`: categoria del plato, por ejemplo sopa, plato fuerte, bebida, postre o entrada.
 
-```bash
-# development
-$ npm run start
+## Metodologia TDD
 
-# watch mode
-$ npm run start:dev
+El desarrollo del proyecto seguira TDD en cada mantenimiento:
 
-# production mode
-$ npm run start:prod
-```
+1. Red: escribir primero una prueba que falle.
+2. Green: implementar el minimo codigo necesario para que la prueba pase.
+3. Refactor: mejorar el codigo sin cambiar el comportamiento cubierto por pruebas.
 
-## Run tests
+No se debe implementar funcionalidad nueva sin pruebas previas.
 
-```bash
-# unit tests
-$ npm run test
+## Endpoints esperados
 
-# e2e tests
-$ npm run test:e2e
+Los endpoints esperados para el mantenimiento de platos tipicos ecuatorianos son:
 
-# test coverage
-$ npm run test:cov
-```
+- `POST /platos-tipicos`: crear un plato tipico.
+- `GET /platos-tipicos`: listar platos tipicos.
+- `GET /platos-tipicos/:id`: consultar un plato tipico por id.
+- `PATCH /platos-tipicos/:id`: actualizar parcialmente un plato tipico.
+- `DELETE /platos-tipicos/:id`: eliminar un plato tipico.
 
-## Deployment
+Estos endpoints aun no estan implementados en la Fase 0.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Fases del proyecto
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- Fase 0: crear documentacion base del proyecto. Estado: completada.
+- Fase 1: preparar pruebas iniciales para el mantenimiento de platos tipicos. Estado: pendiente.
+- Fase 2: implementar CRUD de platos tipicos usando TDD. Estado: pendiente.
+- Fase 3: crear interfaz web para el mantenimiento. Estado: pendiente.
+- Fase 4: configurar GitHub Actions para pruebas automaticas. Estado: pendiente.
+- Fase 5: ajustes finales, validaciones y documentacion de cierre. Estado: pendiente.
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+## Instalacion, ejecucion y pruebas
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Pendiente de completar cuando la fase correspondiente defina los comandos oficiales del proyecto.
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Instalacion: pendiente.
+- Ejecucion: pendiente.
+- Pruebas: pendiente.
