@@ -29,6 +29,12 @@ Clasificacion inicial de deuda tecnica detectada en el CRUD persistente de plato
 | --- | --- | --- | --- |
 | No existia endpoint para obtener estadisticas del CRUD de platos tipicos. | Se agrego `GET /platos-tipicos/stats` con `totalPlatos`, `precioPromedio`, `precioMinimo`, `precioMaximo`, `platosPorRegion`, `platosPorCategoria` y `generatedAt`. | Es perfectivo porque agrega una nueva capacidad de analisis sin corregir un error critico. No calcula disponibilidad porque `PlatoTipico` no tiene campo `disponible`. | Mayor valor funcional para consultas, reportes y revision del estado del CRUD. |
 
+## Mantenimiento preventivo aplicado en Fase 9
+
+| Antes | Despues | Justificacion | Impacto |
+| --- | --- | --- | --- |
+| El CRUD aceptaba textos con espacios, URL invalida, patrones maliciosos, `<script>` y textos demasiado largos. | Se agregaron validaciones de campos obligatorios, longitudes, precio, URL, `trim` y bloqueo de patrones peligrosos. | Es preventivo porque reduce fallos futuros, datos invalidos y riesgos por entradas maliciosas antes de persistir en SQLite. | Mayor calidad de datos, menor riesgo de contenido peligroso y pruebas automatizadas para entradas invalidas. |
+
 ## Orden sugerido
 
 1. Ampliar pruebas del CRUD y errores.

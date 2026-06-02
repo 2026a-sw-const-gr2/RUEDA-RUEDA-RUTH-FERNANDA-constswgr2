@@ -7,6 +7,7 @@ import { CreatePlatoTipicoDto } from './dto/create-plato-tipico.dto';
 import { UpdatePlatoTipicoDto } from './dto/update-plato-tipico.dto';
 
 type PlatoTipicoAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'QUERY';
+type TextField = Exclude<keyof CreatePlatoTipicoDto, 'precio'>;
 
 export interface PlatosTipicosStats {
   totalPlatos: number;
@@ -44,10 +45,10 @@ export class PlatosTipicosService {
   async create(
     dto: CreatePlatoTipicoDto,
   ): Promise<ResponseWithMetadata<PlatoTipicoEntity>> {
-    this.validateCreateDto(dto);
+    const sanitizedDto = this.sanitizeCreateDto(dto);
     const plato = this.platosRepo.create({
-      ...dto,
-      precio: Number(dto.precio),
+      ...sanitizedDto,
+      precio: Number(sanitizedDto.precio),
     });
     const saved = await this.platosRepo.save(plato);
     return this.withMetadata(saved, 'CREATE', saved.id);
@@ -95,11 +96,14 @@ export class PlatosTipicosService {
     id: number,
     dto: UpdatePlatoTipicoDto,
   ): Promise<ResponseWithMetadata<PlatoTipicoEntity>> {
-    this.validateUpdateDto(dto);
+    const sanitizedDto = this.sanitizeUpdateDto(dto);
     const plato = await this.findEntityById(id);
     Object.assign(plato, {
-      ...dto,
-      precio: dto.precio === undefined ? plato.precio : Number(dto.precio),
+      ...sanitizedDto,
+      precio:
+        sanitizedDto.precio === undefined
+          ? plato.precio
+          : Number(sanitizedDto.precio),
     });
     const saved = await this.platosRepo.save(plato);
     return this.withMetadata(saved, 'UPDATE', id);
@@ -113,36 +117,48 @@ export class PlatosTipicosService {
     return this.withMetadata({ deleted: true, id }, 'DELETE', id);
   }
 
-  private validateCreateDto(dto: CreatePlatoTipicoDto): void {
-    const requiredFields: Array<keyof CreatePlatoTipicoDto> = [
+  private sanitizeCreateDto(dto: CreatePlatoTipicoDto): CreatePlatoTipicoDto {
+    const textFields: TextField[] = [
       'nombre',
       'descripcion',
       'region',
       'ingredientes',
-      'precio',
       'imagenUrl',
       'categoria',
     ];
+    const sanitized = { ...dto };
 
-    for (const field of requiredFields) {
-      if (dto[field] === undefined || dto[field] === null || dto[field] === '') {
-        throw new BadRequestException(`El campo ${field} es obligatorio`);
-      }
+    for (const field of textFields) {
+      sanitized[field] = this.sanitizeTextField(field, dto[field]);
+    }
+
+    if (dto.precio === undefined || dto.precio === null) {
+      throw new BadRequestException('El campo precio es obligatorio');
     }
 
     this.validatePrecio(dto.precio);
+    return sanitized;
   }
 
-  private validateUpdateDto(dto: UpdatePlatoTipicoDto): void {
+  private sanitizeUpdateDto(dto: UpdatePlatoTipicoDto): UpdatePlatoTipicoDto {
+    const sanitized = { ...dto };
+
     for (const [field, value] of Object.entries(dto)) {
-      if (value === null || value === '') {
-        throw new BadRequestException(`El campo ${field} no puede estar vacio`);
+      if (field === 'precio') {
+        continue;
       }
+
+      sanitized[field as TextField] = this.sanitizeTextField(
+        field as TextField,
+        value,
+      );
     }
 
     if (dto.precio !== undefined) {
       this.validatePrecio(dto.precio);
     }
+
+    return sanitized;
   }
 
   private validatePrecio(precio: number): void {
@@ -150,6 +166,67 @@ export class PlatosTipicosService {
 
     if (Number.isNaN(numericPrice) || numericPrice < 0) {
       throw new BadRequestException('El precio debe ser un numero mayor o igual a 0');
+    }
+  }
+
+  private sanitizeTextField(field: TextField, value: unknown): string {
+    if (typeof value !== 'string') {
+      throw new BadRequestException(`El campo ${field} es obligatorio`);
+    }
+
+    const sanitized = value.trim();
+
+    if (sanitized.length === 0) {
+      throw new BadRequestException(`El campo ${field} es obligatorio`);
+    }
+
+    this.validateTextLength(field, sanitized);
+    this.validateSafeText(field, sanitized);
+
+    if (field === 'imagenUrl') {
+      this.validateImageUrl(sanitized);
+    }
+
+    return sanitized;
+  }
+
+  private validateTextLength(field: TextField, value: string): void {
+    const limits: Partial<Record<TextField, number>> = {
+      nombre: 100,
+      descripcion: 500,
+      region: 100,
+      ingredientes: 500,
+      imagenUrl: 2048,
+      categoria: 80,
+    };
+    const limit = limits[field];
+
+    if (limit !== undefined && value.length > limit) {
+      throw new BadRequestException(
+        `El campo ${field} no debe superar ${limit} caracteres`,
+      );
+    }
+  }
+
+  private validateSafeText(field: TextField, value: string): void {
+    const dangerousPattern = /<\s*script\b|\b(SELECT|DROP|INSERT)\b|--/i;
+
+    if (dangerousPattern.test(value)) {
+      throw new BadRequestException(
+        `El campo ${field} contiene texto no permitido`,
+      );
+    }
+  }
+
+  private validateImageUrl(value: string): void {
+    try {
+      const url = new URL(value);
+
+      if (!['http:', 'https:'].includes(url.protocol)) {
+        throw new Error('Invalid protocol');
+      }
+    } catch {
+      throw new BadRequestException('El campo imagenUrl debe ser una URL valida');
     }
   }
 

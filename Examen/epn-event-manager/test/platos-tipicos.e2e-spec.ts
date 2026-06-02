@@ -183,6 +183,119 @@ describe('PlatosTipicosController (e2e)', () => {
     expectMetadata(statsResponse.body);
   });
 
+  it('rechaza campos obligatorios vacios o con solo espacios', async () => {
+    const invalidPayloads = [
+      { nombre: '' },
+      { nombre: '   ' },
+      { descripcion: '' },
+      { descripcion: '   ' },
+      { region: '' },
+      { region: '   ' },
+      { ingredientes: '' },
+      { ingredientes: '   ' },
+      { categoria: '' },
+      { categoria: '   ' },
+    ];
+
+    for (const invalidPart of invalidPayloads) {
+      await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+        .post('/platos-tipicos')
+        .send({
+          ...platoPayload(`Validacion Vacio ${Date.now()}`),
+          ...invalidPart,
+        })
+        .expect(400);
+    }
+  });
+
+  it('rechaza precio negativo', async () => {
+    await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+      .post('/platos-tipicos')
+      .send({
+        ...platoPayload(`Validacion Precio ${Date.now()}`),
+        precio: -1,
+      })
+      .expect(400);
+  });
+
+  it('rechaza imagenUrl invalida', async () => {
+    await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+      .post('/platos-tipicos')
+      .send({
+        ...platoPayload(`Validacion Url ${Date.now()}`),
+        imagenUrl: 'imagen-local',
+      })
+      .expect(400);
+  });
+
+  it('rechaza texto con script', async () => {
+    await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+      .post('/platos-tipicos')
+      .send({
+        ...platoPayload(`Validacion Script ${Date.now()}`),
+        descripcion: 'Descripcion con <script>alert(1)</script>',
+      })
+      .expect(400);
+  });
+
+  it('rechaza texto con patrones SQL peligrosos', async () => {
+    const sqlPayloads = [
+      { nombre: 'SELECT * FROM platos' },
+      { descripcion: 'DROP TABLE platos_tipicos' },
+      { ingredientes: 'INSERT INTO platos values' },
+      { categoria: 'Sopa -- comentario' },
+    ];
+
+    for (const invalidPart of sqlPayloads) {
+      await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+        .post('/platos-tipicos')
+        .send({
+          ...platoPayload(`Validacion SQL ${Date.now()}`),
+          ...invalidPart,
+        })
+        .expect(400);
+    }
+  });
+
+  it('rechaza textos demasiado largos', async () => {
+    const longPayloads = [
+      { nombre: 'N'.repeat(101) },
+      { descripcion: 'D'.repeat(501) },
+      { categoria: 'C'.repeat(81) },
+    ];
+
+    for (const invalidPart of longPayloads) {
+      await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
+        .post('/platos-tipicos')
+        .send({
+          ...platoPayload(`Validacion Largo ${Date.now()}`),
+          ...invalidPart,
+        })
+        .expect(400);
+    }
+  });
+
+  it('aplica trim a textos antes de guardar', async () => {
+    const response = await supertest(
+      app.getHttpServer() as Parameters<typeof supertest>[0],
+    )
+      .post('/platos-tipicos')
+      .send({
+        ...platoPayload(`  Encebollado Trim ${Date.now()}  `),
+        region: '  Costa  ',
+        categoria: '  Sopa tradicional  ',
+      })
+      .expect(201);
+
+    createdIds.push(response.body.data.id);
+
+    expect(response.body.data.nombre).toMatch(/^Encebollado Trim/);
+    expect(response.body.data.nombre).not.toMatch(/^ /);
+    expect(response.body.data.nombre).not.toMatch(/ $/);
+    expect(response.body.data.region).toBe('Costa');
+    expect(response.body.data.categoria).toBe('Sopa tradicional');
+  });
+
   it('actualiza un plato tipico existente', async () => {
     const nombre = `Encebollado Actualizar ${Date.now()}`;
     const createResponse = await createPlato(nombre);

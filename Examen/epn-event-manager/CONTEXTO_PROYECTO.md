@@ -248,6 +248,41 @@ Impacto:
 - Las pruebas validan que el endpoint calcula estadisticas desde SQLite.
 - Estado TDD Fase 8: RED confirmado por ausencia del endpoint; GREEN confirmado despues de implementar.
 
+## Mantenimiento preventivo Fase 9
+
+En Fase 9 se agregaron validaciones y sanitizacion para prevenir datos invalidos y entradas maliciosas.
+
+Antes:
+
+- Se aceptaban textos con solo espacios.
+- Se aceptaban URLs invalidas.
+- Se aceptaban textos con `<script>`.
+- Se aceptaban patrones SQL textuales como `SELECT`, `DROP`, `INSERT` y `--`.
+- Se aceptaban textos demasiado largos.
+- Los textos no se guardaban con `trim`.
+
+Despues:
+
+- `nombre` es obligatorio y maximo 100 caracteres.
+- `descripcion` es obligatoria y maximo 500 caracteres.
+- `region` es obligatoria.
+- `ingredientes` es obligatorio.
+- `precio` debe ser mayor o igual a 0.
+- `imagenUrl` debe ser una URL valida `http` o `https`.
+- `categoria` es obligatoria y maximo 80 caracteres.
+- Se aplica `trim` a textos.
+- Se bloquean `<script>`, `SELECT`, `DROP`, `INSERT` y `--`.
+
+Justificacion:
+
+- Es mantenimiento preventivo porque reduce la probabilidad de fallos futuros, datos inconsistentes y riesgos por entradas maliciosas.
+
+Impacto:
+
+- El CRUD rechaza datos invalidos antes de persistirlos en SQLite.
+- Las pruebas preventivas quedan automatizadas.
+- Estado TDD Fase 9: RED confirmado por fallos de validacion; GREEN confirmado despues de implementar.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -317,5 +352,5 @@ npm run format
 | Fase 6 | Aplicar mantenimiento correctivo | Completada |
 | Fase 7 | Aplicar mantenimiento adaptativo | Completada |
 | Fase 8 | Aplicar mantenimiento perfectivo | Completada |
-| Fase 9 | Aplicar mantenimiento preventivo | Pendiente |
+| Fase 9 | Aplicar mantenimiento preventivo | Completada |
 | Fase 10 | Agregar logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |

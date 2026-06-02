@@ -186,3 +186,34 @@ Este cambio es perfectivo porque agrega una capacidad de analisis sin corregir u
 ### Impacto
 
 La API ofrece informacion agregada del CRUD y las pruebas quedaron en GREEN con 12 pruebas e2e pasando.
+
+## Actualizacion Fase 9: mantenimiento preventivo
+
+### Antes
+
+El CRUD aceptaba algunos datos invalidos o riesgosos: textos con solo espacios, URLs invalidas, `<script>`, patrones SQL textuales, textos demasiado largos y valores sin `trim`.
+
+### Prueba preventiva
+
+Se agregaron pruebas e2e para confirmar:
+
+- campos obligatorios vacios;
+- campos con solo espacios;
+- precio negativo;
+- `imagenUrl` invalida;
+- texto con `<script>`;
+- patrones `SELECT`, `DROP`, `INSERT` y `--`;
+- textos demasiado largos;
+- aplicacion de `trim`.
+
+### Despues
+
+El servicio sanitiza textos con `trim`, valida longitudes, bloquea patrones peligrosos y valida URL antes de persistir.
+
+### Justificacion
+
+Este cambio es preventivo porque evita errores futuros, datos inconsistentes y entradas maliciosas antes de que lleguen a SQLite.
+
+### Impacto
+
+El CRUD rechaza datos invalidos y las pruebas quedaron en GREEN con 19 pruebas e2e pasando.

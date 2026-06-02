@@ -172,14 +172,26 @@ Resultado documentado:
 
 ## Pruebas de mantenimiento preventivo
 
-- Rechaza texto con `<script>`.
-- Rechaza patrones peligrosos como `SELECT`, `DROP`, `INSERT` o `--` cuando la fase preventiva lo solicite.
-- Rechaza textos demasiado largos cuando se definan limites.
-- Rechaza campos con solo espacios en blanco.
-- Rechaza `imagenUrl` sin formato URL.
+- [x] Rechaza campos obligatorios vacios.
+- [x] Rechaza campos con solo espacios en blanco.
+- [x] Rechaza precio negativo.
+- [x] Rechaza `imagenUrl` sin formato URL.
+- [x] Rechaza texto con `<script>`.
+- [x] Rechaza patrones peligrosos como `SELECT`, `DROP`, `INSERT` o `--`.
+- [x] Rechaza textos demasiado largos.
+- [x] Aplica `trim` a textos antes de guardar.
 - Rechaza acceso sin API Key cuando se implemente seguridad.
 - Rechaza acceso con API Key incorrecta cuando se implemente seguridad.
 - Registra logs estructurados para creacion, consulta, actualizacion, eliminacion y errores.
+
+Estado TDD Fase 9: RED -> GREEN.
+
+Resultado documentado:
+
+- RED: `npm run test:e2e` fallo porque se aceptaban espacios, URL invalida, `<script>`, patrones SQL, textos largos y textos sin trim.
+- GREEN: `npm run test:e2e` paso con 2 suites y 19 pruebas.
+- `npm test`: 1 suite paso, 1 prueba paso.
+- `npm run build`: paso correctamente.
 
 ## Diagnostico Fase 4
 

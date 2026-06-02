@@ -8,7 +8,7 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 8 completada: se aplico mantenimiento perfectivo agregando el endpoint de estadisticas `GET /platos-tipicos/stats`.
+Fase 9 completada: se aplico mantenimiento preventivo para rechazar datos invalidos y entradas maliciosas.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
@@ -34,6 +34,23 @@ Campos oficiales:
 No se deben agregar como campos obligatorios del recurso: `provincia`, `disponible`, `createdAt`, `updatedAt`.
 
 Los timestamps ISO 8601 se usaran solo en logs, metadata adaptativa o auditoria cuando una fase lo solicite.
+
+## Validaciones preventivas
+
+El CRUD valida y sanitiza datos antes de guardar:
+
+- `nombre`: obligatorio, maximo 100 caracteres.
+- `descripcion`: obligatoria, maximo 500 caracteres.
+- `region`: obligatoria.
+- `ingredientes`: obligatorio.
+- `precio`: mayor o igual a 0.
+- `imagenUrl`: URL valida con protocolo `http` o `https`.
+- `categoria`: obligatoria, maximo 80 caracteres.
+- Se aplica `trim` a textos.
+- Se rechazan cadenas vacias o con solo espacios.
+- Se bloquea `<script>`.
+- Se bloquean `SELECT`, `DROP`, `INSERT` y comentarios SQL `--`.
+- Se rechazan textos demasiado largos.
 
 ## Metadata adaptativa
 
@@ -308,11 +325,11 @@ Pruebas e2e:
 npm run test:e2e
 ```
 
-Resultado Fase 8:
+Resultado Fase 9:
 
 ```text
 Test Suites: 2 passed, 2 total
-Tests: 12 passed, 12 total
+Tests: 19 passed, 19 total
 Estado TDD: GREEN
 ```
 
@@ -363,7 +380,7 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 6 | Mantenimiento correctivo | Completada |
 | Fase 7 | Mantenimiento adaptativo | Completada |
 | Fase 8 | Mantenimiento perfectivo | Completada |
-| Fase 9 | Mantenimiento preventivo | Pendiente |
+| Fase 9 | Mantenimiento preventivo | Completada |
 | Fase 10 | Logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
 
 ## Git
