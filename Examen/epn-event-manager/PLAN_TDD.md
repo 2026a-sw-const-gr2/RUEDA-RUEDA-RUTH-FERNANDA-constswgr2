@@ -67,6 +67,19 @@ Pruebas pendientes para ampliar cobertura del CRUD inicial:
 - Eliminar plato tipico existente.
 - Eliminar plato tipico inexistente.
 
+## Checklist de persistencia Fase 3
+
+- [x] Ejecutar backend real desde `dist/main.js`.
+- [x] Probar `POST /platos-tipicos`.
+- [x] Probar `GET /platos-tipicos`.
+- [x] Probar `GET /platos-tipicos/:id`.
+- [x] Probar `PATCH /platos-tipicos/:id`.
+- [x] Probar `DELETE /platos-tipicos/:id`.
+- [x] Crear un plato tipico para persistencia.
+- [x] Reiniciar el servidor.
+- [x] Ejecutar `GET /platos-tipicos` despues del reinicio.
+- [x] Confirmar que el plato creado sigue existiendo en `db/platos-tipicos.sqlite`.
+
 ## Pruebas de validaciones
 
 - `nombre` vacio falla.

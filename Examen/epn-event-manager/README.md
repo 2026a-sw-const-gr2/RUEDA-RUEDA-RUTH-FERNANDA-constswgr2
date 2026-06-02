@@ -8,7 +8,7 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 2 completada: se creo el CRUD inicial persistente de platos tipicos ecuatorianos.
+Fase 3 completada: se probo el CRUD inicial persistente de platos tipicos ecuatorianos.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
@@ -103,6 +103,18 @@ La persistencia usa SQLite dentro de `db/platos-tipicos.sqlite`, aprovechando la
 
 Ejemplo de creacion:
 
+```json
+{
+  "nombre": "Encebollado",
+  "descripcion": "Plato tradicional de la Costa ecuatoriana preparado con pescado y yuca.",
+  "region": "Costa",
+  "ingredientes": "Pescado, yuca, cebolla, tomate, cilantro y limon",
+  "precio": 3.5,
+  "imagenUrl": "https://example.com/encebollado.jpg",
+  "categoria": "Sopa tradicional"
+}
+```
+
 ```bash
 curl -X POST http://localhost:3000/platos-tipicos \
   -H "Content-Type: application/json" \
@@ -113,6 +125,33 @@ Listar platos:
 
 ```bash
 curl http://localhost:3000/platos-tipicos
+```
+
+Consultar por id:
+
+```bash
+curl http://localhost:3000/platos-tipicos/1
+```
+
+Actualizar parcialmente:
+
+```json
+{
+  "precio": 4,
+  "categoria": "Sopa"
+}
+```
+
+```bash
+curl -X PATCH http://localhost:3000/platos-tipicos/1 \
+  -H "Content-Type: application/json" \
+  -d "{\"precio\":4,\"categoria\":\"Sopa\"}"
+```
+
+Eliminar:
+
+```bash
+curl -X DELETE http://localhost:3000/platos-tipicos/1
 ```
 
 ## Como probar persistencia
@@ -133,6 +172,8 @@ curl http://localhost:3000/platos-tipicos
 ```
 
 El plato creado debe seguir apareciendo porque se guarda en `db/platos-tipicos.sqlite`.
+
+Resultado de Fase 3: se creo un plato, se reinicio el backend y `GET /platos-tipicos` confirmo que el registro seguia existiendo en SQLite.
 
 ## Comandos reales
 
@@ -219,7 +260,7 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 0 | Documentacion base y contexto real | Completada |
 | Fase 1 | Revision de estructura real | Completada |
 | Fase 2 | Crear CRUD inicial persistente | Completada |
-| Fase 3 | Probar CRUD inicial y persistencia | Pendiente |
+| Fase 3 | Probar CRUD inicial y persistencia | Completada |
 | Fase 4 | Diagnostico de deuda tecnica | Pendiente |
 | Fase 5 | Mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
 | Fase 6 | Pruebas, logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |

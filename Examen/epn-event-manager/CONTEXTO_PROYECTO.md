@@ -18,7 +18,7 @@ CRUD persistente de platos tipicos ecuatorianos.
 
 ## Situacion actual
 
-El proyecto ya existe y es una aplicacion NestJS. En Fase 2 se creo el CRUD inicial persistente de platos tipicos ecuatorianos.
+El proyecto ya existe y es una aplicacion NestJS. En Fase 2 se creo el CRUD inicial persistente de platos tipicos ecuatorianos y en Fase 3 se probo su funcionamiento con el backend real.
 
 La revision de Fase 1 confirmo que el proyecto ya tenia estructura modular en `src/modules` y configuracion de TypeORM con SQLite mediante `better-sqlite3`. En Fase 2 la configuracion TypeORM quedo apuntando a `db/platos-tipicos.sqlite`.
 
@@ -105,6 +105,19 @@ La persistencia usa TypeORM con SQLite en `db/platos-tipicos.sqlite`. No se usan
 
 Se agrego `test/platos-tipicos.e2e-spec.ts` para crear un plato tipico, cerrar la aplicacion Nest, volver a iniciarla y verificar que `GET /platos-tipicos` conserva el registro desde SQLite.
 
+En Fase 3 tambien se ejecuto una prueba funcional manual contra `http://localhost:3000`:
+
+- `POST /platos-tipicos` creo un plato de prueba.
+- `GET /platos-tipicos` listo los platos guardados.
+- `GET /platos-tipicos/:id` consulto el plato creado.
+- `PATCH /platos-tipicos/:id` actualizo precio y categoria.
+- `DELETE /platos-tipicos/:id` elimino el plato usado para CRUD basico.
+- Se creo un segundo plato para persistencia.
+- Se reinicio el backend.
+- `GET /platos-tipicos` confirmo que el segundo plato seguia existiendo en `db/platos-tipicos.sqlite`.
+
+Resultado: el proyecto base persistente esta listo para iniciar el diagnostico de deuda tecnica y las fases de mantenimiento.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -168,7 +181,7 @@ npm run format
 | Fase 0 | Crear documentacion base y ajustar contexto real del proyecto | Completada |
 | Fase 1 | Revisar estructura real del proyecto y decidir ubicacion del CRUD | Completada |
 | Fase 2 | Crear CRUD inicial persistente de platos tipicos ecuatorianos | Completada |
-| Fase 3 | Probar CRUD inicial y persistencia | Pendiente |
+| Fase 3 | Probar CRUD inicial y persistencia | Completada |
 | Fase 4 | Diagnosticar deuda tecnica del CRUD inicial | Pendiente |
 | Fase 5 | Aplicar mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
 | Fase 6 | Agregar pruebas, logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
