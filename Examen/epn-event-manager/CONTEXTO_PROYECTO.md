@@ -1,128 +1,162 @@
-﻿# CONTEXTO DEL PROYECTO
+﻿# Contexto del Proyecto
 
 ## Proyecto
 
-EPN Event Manager - Examen de Mantenimiento de Software.
+`Examen/epn-event-manager`
 
-## Ubicación
+## Tipo
 
-Examen/epn-event-manager
+Proyecto NestJS para examen de mantenimiento de software.
 
 ## Rama de trabajo
 
-desarrollo
+Los cambios se realizan en la rama `desarrollo`.
 
 ## Tema funcional
 
-CRUD de platos típicos ecuatorianos.
+CRUD persistente de platos tipicos ecuatorianos.
 
-## Recurso principal
+## Situacion actual
 
-PlatoTipico.
+El proyecto ya existe y es una aplicacion NestJS. Todavia no existe el CRUD inicial de platos tipicos ecuatorianos.
 
-## Campos oficiales
-
-- id
-- nombre
-- descripcion
-- region
-- ingredientes
-- precio
-- imagenUrl
-- categoria
+La revision de Fase 1 confirma que el proyecto ya tiene estructura modular en `src/modules`, configuracion de TypeORM con SQLite mediante `better-sqlite3`, y una base actual ubicada en `db/events.sqlite` para los modulos existentes de eventos.
 
 ## Objetivo general
 
-Primero crear un CRUD inicial persistente usando SQLite.
+Construir primero un CRUD inicial funcional y persistente de platos tipicos ecuatorianos. Despues se aplicara el examen de mantenimiento sobre ese CRUD.
 
-Después aplicar mantenimiento de software sobre ese CRUD:
+## Objetivo por etapas
 
-- correctivo
-- adaptativo
-- perfectivo
-- preventivo
+1. Crear primero el CRUD inicial.
+2. Luego diagnosticar deuda tecnica.
+3. Luego aplicar mantenimiento correctivo, adaptativo, perfectivo y preventivo.
+4. Luego agregar pruebas, logs, seguridad, Swagger, GitHub Actions y documentacion final.
 
-## Estructura actual
+## Recurso principal
 
-- db/: base de datos SQLite.
-- src/: código fuente NestJS.
-- src/database/: configuración de base de datos.
-- src/modules/: módulos funcionales.
-- test/: pruebas e2e.
-- README.md: documentación de uso.
-- PLAN_TDD.md: planificación de pruebas.
-- AGENTS.md: reglas para Codex.
+`PlatoTipico`.
 
-## Fases del proyecto
+Campos oficiales:
 
-### Fase 0 - Actualizar documentación base
+- `id`
+- `nombre`
+- `descripcion`
+- `region`
+- `ingredientes`
+- `precio`
+- `imagenUrl`
+- `categoria`
 
-Estado: pendiente
+No son campos obligatorios del recurso: `provincia`, `disponible`, `createdAt`, `updatedAt`.
 
-### Fase 1 - Revisar estructura real
+Los timestamps ISO 8601 se usaran solo en logs, metadata adaptativa o auditoria cuando una fase lo solicite.
 
-Estado: pendiente
+## Estructura real revisada en Fase 1
 
-### Fase 2 - Crear CRUD inicial persistente con SQLite
+- `src`: codigo fuente NestJS.
+- `src/app.module.ts`: importa `DatabaseModule`, `EventsModule`, `HealthModule` y `StatsModule`.
+- `src/database`: modulo de base de datos y entidades actuales.
+- `src/database/database.module.ts`: configura TypeORM con `better-sqlite3`, base `db/events.sqlite` y `synchronize: true`.
+- `src/database/entities`: contiene entidades de eventos existentes.
+- `src/modules`: estructura modular existente del proyecto.
+- `src/modules/events`: modulo actual para eventos.
+- `src/modules/health`: modulo actual de salud.
+- `src/modules/stats`: modulo actual de estadisticas de eventos.
+- `test`: contiene prueba e2e base `app.e2e-spec.ts` y configuracion `jest-e2e.json`.
+- `db`: contiene actualmente `events.sqlite`.
+- `README.md`: documentacion principal.
+- `PLAN_TDD.md`: plan de pruebas.
+- `AGENTS.md`: reglas de Codex.
 
-Estado: pendiente
+## Hallazgos de Fase 1
 
-### Fase 3 - Probar CRUD inicial y persistencia
+- Si existe estructura `src/modules`; por coherencia, el CRUD debe crearse ahi.
+- No existen modulos de platos tipicos todavia.
+- No existe `src/modules/platos-tipicos` todavia.
+- No existe `src/platos-tipicos` todavia.
+- Si existe configuracion TypeORM/SQLite.
+- La configuracion actual usa `TypeOrmModule.forRoot` en `src/database/database.module.ts`.
+- La base actual configurada es `db/events.sqlite`.
+- `AppModule` ya tiene configuracion de base de datos indirecta porque importa `DatabaseModule`.
+- El CRUD inicial debe ser persistente, no con arreglos en memoria.
 
-Estado: pendiente
+## Ubicacion recomendada para el CRUD inicial
 
-### Fase 4 - Diagnóstico de deuda técnica
+Crear el CRUD en:
 
-Estado: pendiente
+```text
+src/modules/platos-tipicos
+```
 
-### Fase 5 - TDD base del CRUD
+Motivo: el proyecto ya organiza sus funcionalidades en `src/modules` y `AGENTS.md` define esta ruta como obligatoria para el CRUD de platos tipicos ecuatorianos.
 
-Estado: pendiente
+Para persistencia, la fase de implementacion debera agregar la entidad correspondiente de `PlatoTipico` a la configuracion TypeORM y usar SQLite dentro de `db/`.
 
-### Fase 6 - Mantenimiento correctivo
+## Comandos reales identificados
 
-Estado: pendiente
+Instalacion:
 
-### Fase 7 - Mantenimiento adaptativo
+```bash
+npm install
+```
 
-Estado: pendiente
+Ejecucion en desarrollo:
 
-### Fase 8 - Mantenimiento perfectivo
+```bash
+npm run start:dev
+```
 
-Estado: pendiente
+Ejecucion normal:
 
-### Fase 9 - Mantenimiento preventivo
+```bash
+npm run start
+```
 
-Estado: pendiente
+Pruebas unitarias:
 
-### Fase 10 - Seguridad por API Key
+```bash
+npm test
+```
 
-Estado: pendiente
+Pruebas e2e:
 
-### Fase 11 - Logs y trazabilidad
+```bash
+npm run test:e2e
+```
 
-Estado: pendiente
+Cobertura:
 
-### Fase 12 - Swagger / OpenAPI
+```bash
+npm run test:cov
+```
 
-Estado: pendiente
+Build:
 
-### Fase 13 - Frontend / hub visual
+```bash
+npm run build
+```
 
-Estado: pendiente
+Lint:
 
-### Fase 14 - GitHub Actions
+```bash
+npm run lint
+```
 
-Estado: pendiente
+Formato:
 
-### Fase 15 - Pruebas manuales o Postman
+```bash
+npm run format
+```
 
-Estado: pendiente
+## Registro de fases
 
-### Fase 16 - Documentación final
-
-Estado: pendiente
-
-### Fase 17 - Revisión final
-
-Estado: pendiente
+| Fase | Descripcion | Estado |
+| --- | --- | --- |
+| Fase 0 | Crear documentacion base y ajustar contexto real del proyecto | Completada |
+| Fase 1 | Revisar estructura real del proyecto y decidir ubicacion del CRUD | Completada |
+| Fase 2 | Crear CRUD inicial persistente de platos tipicos ecuatorianos | Pendiente |
+| Fase 3 | Probar CRUD inicial y persistencia | Pendiente |
+| Fase 4 | Diagnosticar deuda tecnica del CRUD inicial | Pendiente |
+| Fase 5 | Aplicar mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
+| Fase 6 | Agregar pruebas, logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |

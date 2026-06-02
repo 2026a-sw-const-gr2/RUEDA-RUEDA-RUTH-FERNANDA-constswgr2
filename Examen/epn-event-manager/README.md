@@ -1,78 +1,60 @@
 ﻿# EPN Event Manager - Examen de Mantenimiento de Software
 
-## Descripción
+## Descripcion
 
-Este proyecto corresponde al examen práctico de Mantenimiento de Software.
+Proyecto NestJS para el examen de mantenimiento de software.
 
-El objetivo es construir primero un CRUD inicial persistente de platos típicos ecuatorianos y luego aplicar sobre ese CRUD las actividades de mantenimiento de software:
+El objetivo es construir primero un CRUD inicial persistente de platos tipicos ecuatorianos y luego aplicar sobre ese CRUD actividades de mantenimiento correctivo, adaptativo, perfectivo y preventivo.
 
-- Mantenimiento correctivo
-- Mantenimiento adaptativo
-- Mantenimiento perfectivo
-- Mantenimiento preventivo
+## Estado actual
 
-El sistema usa NestJS para el backend, SQLite para persistencia, pruebas dirigidas por TDD, documentación, logs, seguridad por API Key, Swagger/OpenAPI, GitHub Actions y un frontend con Node.js para visualizar y gestionar los platos típicos.
+Fase 1 completada: se reviso la estructura real del proyecto.
 
----
-
-## Tema funcional
-
-Sistema de gestión de platos típicos ecuatorianos.
-
----
+Todavia no existe el CRUD inicial de platos tipicos ecuatorianos. No existe frontend y no existe GitHub Actions en esta fase.
 
 ## Recurso principal
 
-### PlatoTipico
+`PlatoTipico`.
 
 Campos oficiales:
 
-| Campo | Descripción |
-|---|---|
-| `id` | Identificador único del plato típico |
-| `nombre` | Nombre del plato típico |
-| `descripcion` | Descripción del plato |
-| `region` | Región del Ecuador a la que pertenece |
+| Campo | Descripcion |
+| --- | --- |
+| `id` | Identificador unico del plato tipico |
+| `nombre` | Nombre del plato tipico |
+| `descripcion` | Descripcion del plato |
+| `region` | Region del Ecuador a la que pertenece |
 | `ingredientes` | Ingredientes principales |
 | `precio` | Precio referencial |
 | `imagenUrl` | URL de imagen del plato |
-| `categoria` | Categoría gastronómica |
+| `categoria` | Categoria gastronomica |
 
-Ejemplo:
+No se deben agregar como campos obligatorios del recurso: `provincia`, `disponible`, `createdAt`, `updatedAt`.
 
-```json
-{
-  "nombre": "Encebollado",
-  "descripcion": "Plato tradicional de la Costa ecuatoriana preparado con pescado, yuca, cebolla y tomate.",
-  "region": "Costa",
-  "ingredientes": "Pescado, yuca, cebolla, tomate, cilantro y limón",
-  "precio": 3.5,
-  "imagenUrl": "https://via.placeholder.com/300x200",
-  "categoria": "Sopa tradicional"
-}
-```
+Los timestamps ISO 8601 se usaran solo en logs, metadata adaptativa o auditoria cuando una fase lo solicite.
 
----
-
-## Estructura del proyecto
+## Estructura real del proyecto
 
 ```text
 epn-event-manager/
 ├── db/
-│   └── platos-tipicos.sqlite
+│   └── events.sqlite
 ├── src/
 │   ├── database/
+│   │   ├── database.module.ts
+│   │   └── entities/
 │   ├── modules/
-│   │   └── platos-tipicos/
+│   │   ├── events/
+│   │   ├── health/
+│   │   └── stats/
 │   ├── app.controller.ts
+│   ├── app.controller.spec.ts
 │   ├── app.module.ts
 │   ├── app.service.ts
 │   └── main.ts
 ├── test/
-├── frontend/
-├── docs/
-├── .github/
-│   └── workflows/
+│   ├── app.e2e-spec.ts
+│   └── jest-e2e.json
 ├── AGENTS.md
 ├── CONTEXTO_PROYECTO.md
 ├── PLAN_TDD.md
@@ -81,414 +63,137 @@ epn-event-manager/
 └── package-lock.json
 ```
 
----
+## Hallazgos tecnicos
 
-## Tecnologías usadas
+- El proyecto ya usa estructura `src/modules`.
+- `AppModule` importa `DatabaseModule`, `EventsModule`, `HealthModule` y `StatsModule`.
+- `DatabaseModule` configura TypeORM con `better-sqlite3`.
+- La base actual configurada es `db/events.sqlite`.
+- Existe carpeta `db` para persistencia.
+- Existen pruebas Jest unitarias en `src` y e2e en `test`.
+- No existe todavia `src/modules/platos-tipicos`.
+- No existe configuracion de frontend ni GitHub Actions en esta fase.
 
-- Node.js
-- NestJS
-- TypeScript
-- SQLite
-- TypeORM
-- Jest
-- Swagger / OpenAPI
-- GitHub Actions
-- Frontend con Node.js
-- Vite con JavaScript
+## Ubicacion del CRUD inicial
 
----
+El CRUD inicial de platos tipicos ecuatorianos se creara en:
 
-## Instalación del backend
+```text
+src/modules/platos-tipicos
+```
 
-Desde la carpeta del proyecto:
+Se usa esta ubicacion porque el proyecto ya organiza los modulos dentro de `src/modules` y `AGENTS.md` define esa ruta para el CRUD.
+
+La persistencia debera usar SQLite dentro de `db/`, aprovechando la configuracion TypeORM existente.
+
+## Endpoints esperados
+
+| Metodo | Endpoint | Descripcion |
+| --- | --- | --- |
+| `POST` | `/platos-tipicos` | Crear un plato tipico |
+| `GET` | `/platos-tipicos` | Listar platos tipicos |
+| `GET` | `/platos-tipicos/:id` | Consultar un plato tipico por ID |
+| `PATCH` | `/platos-tipicos/:id` | Actualizar un plato tipico |
+| `DELETE` | `/platos-tipicos/:id` | Eliminar un plato tipico |
+
+Estos endpoints aun no estan implementados.
+
+## Comandos reales
+
+Instalacion:
 
 ```bash
-cd Examen/epn-event-manager
 npm install
 ```
 
----
-
-## Ejecución del backend
+Ejecucion en desarrollo:
 
 ```bash
 npm run start:dev
 ```
 
-Por defecto, el backend se ejecuta en:
+Ejecucion normal:
 
-```text
-http://localhost:3000
+```bash
+npm run start
 ```
 
----
+Ejecucion en produccion despues del build:
 
-## Persistencia
-
-El CRUD de platos típicos ecuatorianos usa SQLite.
-
-La base de datos debe guardarse dentro de la carpeta:
-
-```text
-db/
+```bash
+npm run start:prod
 ```
 
-Ejemplo:
-
-```text
-db/platos-tipicos.sqlite
-```
-
-Los platos típicos no deben guardarse únicamente en memoria RAM. Los datos deben mantenerse después de reiniciar el servidor.
-
----
-
-## Endpoints del CRUD
-
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `POST` | `/platos-tipicos` | Crear un plato típico |
-| `GET` | `/platos-tipicos` | Listar platos típicos |
-| `GET` | `/platos-tipicos/:id` | Consultar un plato típico por ID |
-| `PATCH` | `/platos-tipicos/:id` | Actualizar un plato típico |
-| `DELETE` | `/platos-tipicos/:id` | Eliminar un plato típico |
-
----
-
-## Endpoint perfectivo de estadísticas
-
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `GET` | `/platos-tipicos/stats` | Obtener estadísticas de platos típicos |
-
-Este endpoint calcula:
-
-- total de platos
-- precio promedio
-- precio mínimo
-- precio máximo
-- platos por región
-- platos por categoría
-- fecha de generación en formato ISO 8601
-
----
-
-## Seguridad por API Key
-
-Los endpoints protegidos deben recibir la cabecera:
-
-```text
-X-FIS-EPN-KEY
-```
-
-Ejemplo:
-
-```http
-X-FIS-EPN-KEY: clave-de-prueba
-```
-
-La clave debe configurarse mediante variables de entorno.
-
-Archivo esperado:
-
-```text
-.env
-```
-
-Archivo que sí puede subirse al repositorio:
-
-```text
-.env.example
-```
-
-Ejemplo de `.env.example`:
-
-```env
-PORT=3000
-NODE_ENV=development
-FIS_EPN_API_KEY=clave-de-prueba
-```
-
-No se debe subir el archivo `.env` real.
-
----
-
-## Swagger / OpenAPI
-
-La documentación de la API estará disponible en:
-
-```text
-http://localhost:3000/api/docs
-```
-
-Swagger debe documentar:
-
-- endpoints del CRUD
-- endpoint de estadísticas
-- DTOs
-- respuestas de error
-- cabecera `X-FIS-EPN-KEY`
-
----
-
-## Pruebas
-
-Ejecutar pruebas:
+Pruebas unitarias:
 
 ```bash
 npm test
 ```
 
-Ejecutar pruebas e2e si están configuradas:
+Pruebas en modo watch:
+
+```bash
+npm run test:watch
+```
+
+Pruebas e2e:
 
 ```bash
 npm run test:e2e
 ```
 
----
+Cobertura:
 
-## Build
+```bash
+npm run test:cov
+```
+
+Build:
 
 ```bash
 npm run build
 ```
 
----
-
-## Frontend con Node.js
-
-El frontend se encuentra en:
-
-```text
-frontend/
-```
-
-El frontend debe permitir:
-
-- listar platos típicos
-- mostrar tarjetas con imagen, nombre, descripción, región, ingredientes, precio y categoría
-- crear platos típicos
-- ver detalle
-- editar platos típicos
-- eliminar platos típicos
-- visualizar estadísticas
-- consumir la API protegida con `X-FIS-EPN-KEY`
-
-### Instalación del frontend
+Lint:
 
 ```bash
-cd frontend
-npm install
+npm run lint
 ```
 
-### Ejecución del frontend
+Formato:
 
 ```bash
-npm run dev
+npm run format
 ```
-
-### Build del frontend
-
-```bash
-npm run build
-```
-
----
-
-## Mantenimientos aplicados
-
-El proyecto se desarrolla en dos etapas:
-
-1. Construcción del CRUD inicial persistente.
-2. Aplicación del examen de mantenimiento sobre el CRUD.
-
-### Mantenimiento correctivo
-
-Objetivo: corregir fallos funcionales del CRUD.
-
-Ejemplos:
-
-- asegurar que `DELETE /platos-tipicos/:id` elimine realmente en SQLite
-- evitar respuestas de éxito falsas
-- manejar errores cuando el ID no existe
-
-### Mantenimiento adaptativo
-
-Objetivo: adaptar el sistema a nuevas necesidades de integración.
-
-Ejemplos:
-
-- metadata estandarizada
-- `timestampISO`
-- `apiVersion`
-- `timezone`
-- `environment`
-- `integrationTarget`
-- integración con EPN Event Manager
-
-### Mantenimiento perfectivo
-
-Objetivo: mejorar el sistema agregando nuevas capacidades.
-
-Ejemplo:
-
-```text
-GET /platos-tipicos/stats
-```
-
-### Mantenimiento preventivo
-
-Objetivo: prevenir errores futuros y entradas peligrosas.
-
-Validaciones:
-
-- campos obligatorios
-- precio mayor o igual a 0
-- URL de imagen válida
-- límites de caracteres
-- bloqueo de `<script>`
-- bloqueo de patrones como `SELECT`, `DROP`, `INSERT` o `--`
-
----
 
 ## TDD
 
-El desarrollo de mantenimientos se realiza con TDD:
+Los mantenimientos del examen se realizaran con TDD:
 
-1. **RED:** crear una prueba que falle.
-2. **GREEN:** implementar el código mínimo para que pase.
-3. **REFACTOR:** mejorar el código sin cambiar el comportamiento.
+1. RED: crear una prueba que falle.
+2. GREEN: implementar el codigo minimo para que pase.
+3. REFACTOR: mejorar sin cambiar el comportamiento.
 
-El detalle de pruebas se encuentra en:
-
-```text
-PLAN_TDD.md
-```
-
----
-
-## Logs y trazabilidad
-
-El sistema debe registrar operaciones importantes:
-
-- creación
-- consulta
-- actualización
-- eliminación
-- errores de validación
-- errores de API Key
-- errores internos
-
-Los logs deben incluir:
-
-- nivel `INFO`, `WARN` o `ERROR`
-- fecha en formato ISO 8601
-- acción realizada
-- ruta o endpoint
-- ID del plato típico cuando aplique
-
----
-
-## GitHub Actions
-
-El proyecto incluye integración continua con GitHub Actions.
-
-El workflow debe ejecutar:
-
-- instalación de dependencias
-- lint si está configurado
-- pruebas
-- build del backend
-- build del frontend si existe
-
-Archivo esperado:
-
-```text
-.github/workflows/node-ci.yml
-```
-
----
-
-## Documentación del examen
-
-Archivos principales:
-
-| Archivo | Propósito |
-|---|---|
-| `AGENTS.md` | Reglas para Codex |
-| `CONTEXTO_PROYECTO.md` | Contexto, estructura y avance por fases |
-| `PLAN_TDD.md` | Plan de pruebas y metodología TDD |
-| `docs/DIAGNOSTICO_DEUDA_TECNICA.md` | Diagnóstico inicial |
-| `docs/TABLA_MANTENIMIENTO.md` | Clasificación de mantenimientos |
-| `docs/PRUEBAS_MANUALES_API.md` | Evidencia de pruebas manuales |
-
----
+El plan de pruebas se mantiene en `PLAN_TDD.md`.
 
 ## Fases del proyecto
 
-| Fase | Descripción |
-|---|---|
-| Fase 0 | Actualizar documentación base |
-| Fase 1 | Revisar estructura real |
-| Fase 2 | Crear CRUD inicial persistente con SQLite |
-| Fase 3 | Probar CRUD inicial y persistencia |
-| Fase 4 | Diagnóstico de deuda técnica |
-| Fase 5 | TDD base del CRUD |
-| Fase 6 | Mantenimiento correctivo |
-| Fase 7 | Mantenimiento adaptativo |
-| Fase 8 | Mantenimiento perfectivo |
-| Fase 9 | Mantenimiento preventivo |
-| Fase 10 | Seguridad por API Key |
-| Fase 11 | Logs y trazabilidad |
-| Fase 12 | Swagger / OpenAPI |
-| Fase 13 | Frontend con Node.js |
-| Fase 14 | GitHub Actions |
-| Fase 15 | Pruebas manuales o Postman |
-| Fase 16 | Documentación final |
-| Fase 17 | Revisión final |
+| Fase | Descripcion | Estado |
+| --- | --- | --- |
+| Fase 0 | Documentacion base y contexto real | Completada |
+| Fase 1 | Revision de estructura real | Completada |
+| Fase 2 | Crear CRUD inicial persistente | Pendiente |
+| Fase 3 | Probar CRUD inicial y persistencia | Pendiente |
+| Fase 4 | Diagnostico de deuda tecnica | Pendiente |
+| Fase 5 | Mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
+| Fase 6 | Pruebas, logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
 
----
+## Git
 
-## Comandos útiles de Git
-
-Los cambios se realizan en la rama:
+Rama de trabajo:
 
 ```bash
-git switch desarrollo
+desarrollo
 ```
 
-Después de completar cada fase:
-
-```bash
-git status
-git add .
-git commit -m "Mensaje de la fase"
-git push origin desarrollo
-```
-
-Ejemplo:
-
-```bash
-git add .
-git commit -m "Crear CRUD inicial persistente de platos tipicos"
-git push origin desarrollo
-```
-
----
-
-## Estado del proyecto
-
-El proyecto debe quedar listo para demostrar:
-
-- CRUD persistente de platos típicos ecuatorianos
-- pruebas con TDD
-- mantenimiento correctivo
-- mantenimiento adaptativo
-- mantenimiento perfectivo
-- mantenimiento preventivo
-- seguridad con API Key
-- logs y trazabilidad
-- documentación Swagger
-- frontend con Node.js
-- GitHub Actions
-- documentación final para sustentar el examen
+Despues de cada fase se debe registrar el cambio en la rama `desarrollo`.

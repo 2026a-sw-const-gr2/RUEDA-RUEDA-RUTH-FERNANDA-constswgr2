@@ -1,79 +1,119 @@
 ﻿# PLAN TDD
 
-## Metodología
+## Metodologia
 
-Cada mantenimiento debe seguir:
+Cada mantenimiento del examen debe seguir:
 
-1. RED: crear prueba que falle.
-2. GREEN: implementar código mínimo.
+1. RED: crear una prueba que falle.
+2. GREEN: implementar el codigo minimo.
 3. REFACTOR: mejorar sin cambiar comportamiento.
 
-## Pruebas del CRUD inicial
+## Comandos reales de testing
 
-- Crear plato típico.
-- Listar platos típicos.
-- Consultar plato típico existente.
-- Consultar plato típico inexistente.
-- Actualizar plato típico existente.
-- Actualizar plato típico inexistente.
-- Eliminar plato típico existente.
-- Eliminar plato típico inexistente.
-- Verificar persistencia SQLite después de reiniciar.
+Pruebas unitarias:
+
+```bash
+npm test
+```
+
+Pruebas unitarias en modo watch:
+
+```bash
+npm run test:watch
+```
+
+Pruebas e2e:
+
+```bash
+npm run test:e2e
+```
+
+Cobertura:
+
+```bash
+npm run test:cov
+```
+
+Prueba debug disponible:
+
+```bash
+npm run test:debug
+```
+
+## Configuracion real de pruebas identificada
+
+- Jest unitario esta configurado en `package.json` con `rootDir: "src"` y patron `*.spec.ts`.
+- Las pruebas e2e usan `test/jest-e2e.json`.
+- Actualmente existe `src/app.controller.spec.ts`.
+- Actualmente existe `test/app.e2e-spec.ts`.
+- Todavia no existen pruebas para `PlatoTipico`.
+
+## Pruebas esperadas del CRUD inicial
+
+Cuando se cree el CRUD inicial persistente, se esperan pruebas para:
+
+- Crear plato tipico.
+- Listar platos tipicos.
+- Consultar plato tipico existente.
+- Consultar plato tipico inexistente.
+- Actualizar plato tipico existente.
+- Actualizar plato tipico inexistente.
+- Eliminar plato tipico existente.
+- Eliminar plato tipico inexistente.
+- Verificar persistencia SQLite despues de reiniciar.
+
+## Pruebas de validaciones
+
+- `nombre` vacio falla.
+- `descripcion` vacia falla.
+- `region` vacia falla.
+- `ingredientes` vacio falla.
+- `categoria` vacia falla.
+- `precio` negativo falla.
+- `precio` no numerico falla.
+- `imagenUrl` invalida falla.
 
 ## Pruebas de mantenimiento correctivo
 
-- DELETE elimina realmente en SQLite.
-- DELETE con id inexistente devuelve error controlado.
-- No se retorna éxito falso.
+- `DELETE /platos-tipicos/:id` elimina realmente en SQLite.
+- `DELETE /platos-tipicos/:id` con id inexistente devuelve error controlado.
+- No se retorna exito falso en operaciones fallidas.
 
 ## Pruebas de mantenimiento adaptativo
 
-- CREATE genera metadata.
-- UPDATE genera metadata.
-- DELETE genera metadata.
-- QUERY genera metadata.
-- timestampISO tiene formato ISO 8601.
+- CREATE genera metadata adaptativa cuando la fase lo solicite.
+- UPDATE genera metadata adaptativa cuando la fase lo solicite.
+- DELETE genera metadata adaptativa cuando la fase lo solicite.
+- QUERY genera metadata adaptativa cuando la fase lo solicite.
+- `timestampISO` tiene formato ISO 8601 solo como metadata, log o auditoria, no como campo obligatorio de `PlatoTipico`.
 
 ## Pruebas de mantenimiento perfectivo
 
-- GET /platos-tipicos/stats devuelve totalPlatos.
-- Calcula precioPromedio.
-- Calcula precioMinimo.
-- Calcula precioMaximo.
-- Agrupa platosPorRegion.
-- Agrupa platosPorCategoria.
+- Endpoint de estadisticas devuelve total de platos.
+- Calcula precio promedio.
+- Calcula precio minimo.
+- Calcula precio maximo.
+- Agrupa platos por region.
+- Agrupa platos por categoria.
 
 ## Pruebas de mantenimiento preventivo
 
-- nombre vacío falla.
-- descripcion vacía falla.
-- region vacía falla.
-- ingredientes vacío falla.
-- categoria vacía falla.
-- precio negativo falla.
-- imagenUrl inválida falla.
-- texto con <script> falla.
-- texto con SELECT, DROP, INSERT o -- falla.
-- textos demasiado largos fallan.
+- Rechaza texto con `<script>`.
+- Rechaza patrones peligrosos como `SELECT`, `DROP`, `INSERT` o `--` cuando la fase preventiva lo solicite.
+- Rechaza textos demasiado largos cuando se definan limites.
 
-## Pruebas de API Key
+## Checklist manual futuro de frontend
 
-- Sin X-FIS-EPN-KEY devuelve 401.
-- API Key incorrecta devuelve 401.
-- API Key correcta permite acceder.
-
-## Checklist manual de frontend
-
-- Lista platos típicos.
+- Lista platos tipicos.
 - Muestra imagen.
 - Muestra nombre.
-- Muestra descripción.
-- Muestra región.
+- Muestra descripcion.
+- Muestra region.
 - Muestra ingredientes.
 - Muestra precio.
-- Muestra categoría.
+- Muestra categoria.
 - Permite crear.
-- Permite ver.
+- Permite ver detalle.
 - Permite editar.
 - Permite eliminar.
-- Muestra estadísticas.
+- Muestra estadisticas cuando existan.
