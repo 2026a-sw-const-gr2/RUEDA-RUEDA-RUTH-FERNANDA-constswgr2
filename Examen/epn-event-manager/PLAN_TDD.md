@@ -131,12 +131,23 @@ Resultado documentado:
 
 ## Pruebas de mantenimiento adaptativo
 
-- CREATE genera metadata adaptativa cuando la fase lo solicite.
-- UPDATE genera metadata adaptativa cuando la fase lo solicite.
-- DELETE genera metadata adaptativa cuando la fase lo solicite.
-- QUERY genera metadata adaptativa cuando la fase lo solicite.
-- `timestampISO` tiene formato ISO 8601 solo como metadata, log o auditoria, no como campo obligatorio de `PlatoTipico`.
-- Las respuestas mantienen los campos oficiales de `PlatoTipico` separados de la metadata.
+- [x] CREATE genera metadata adaptativa.
+- [x] UPDATE genera metadata adaptativa.
+- [x] DELETE genera metadata adaptativa.
+- [x] QUERY genera metadata adaptativa.
+- [x] `timestampISO` tiene formato ISO 8601 solo como metadata, log o auditoria, no como campo obligatorio de `PlatoTipico`.
+- [x] Las respuestas mantienen los campos oficiales de `PlatoTipico` separados de la metadata.
+- [x] La metadata incluye `source`, `system`, `apiVersion`, `timezone`, `environment` e `integrationTarget`.
+- [x] El CRUD se integra con `EventsService` del modulo `events`.
+
+Estado TDD Fase 7: RED -> GREEN.
+
+Resultado documentado:
+
+- RED: `npm run test:e2e` fallo porque las respuestas aun no tenian `data.metadata`.
+- GREEN: `npm run test:e2e` paso con 2 suites y 11 pruebas.
+- `npm test`: 1 suite paso, 1 prueba paso.
+- `npm run build`: paso correctamente.
 
 ## Pruebas de mantenimiento perfectivo
 

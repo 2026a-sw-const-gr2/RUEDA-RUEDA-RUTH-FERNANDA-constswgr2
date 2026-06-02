@@ -6,6 +6,7 @@ import { AppModule } from './../src/app.module';
 describe('PlatosTipicosController (e2e)', () => {
   let app: INestApplication;
   const createdIds: number[] = [];
+  const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 
   const createApp = async (): Promise<INestApplication> => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -49,8 +50,22 @@ describe('PlatosTipicosController (e2e)', () => {
       .send(platoPayload(nombre))
       .expect(201);
 
-    createdIds.push(response.body.id);
+    createdIds.push(response.body.data.id);
     return response;
+  };
+
+  const expectMetadata = (body: {
+    metadata?: Record<string, string>;
+  }): void => {
+    expect(body.metadata).toMatchObject({
+      source: 'platos-tipicos-crud',
+      system: 'Sistema de Platos Típicos Ecuatorianos',
+      apiVersion: 'v1',
+      timezone: 'America/Guayaquil',
+      environment: expect.any(String),
+      integrationTarget: 'EPN Event Manager',
+    });
+    expect(body.metadata?.timestampISO).toMatch(isoRegex);
   };
 
   it('crea un plato tipico', async () => {
@@ -58,11 +73,14 @@ describe('PlatosTipicosController (e2e)', () => {
     const response = await createPlato(nombre);
 
     expect(response.body).toMatchObject({
-      id: expect.any(Number),
-      nombre,
-      region: 'Costa',
-      precio: 3.5,
+      data: {
+        id: expect.any(Number),
+        nombre,
+        region: 'Costa',
+        precio: 3.5,
+      },
     });
+    expectMetadata(response.body);
   });
 
   it('lista platos tipicos', async () => {
@@ -75,14 +93,15 @@ describe('PlatosTipicosController (e2e)', () => {
       .get('/platos-tipicos')
       .expect(200);
 
-    expect(listResponse.body).toEqual(
+    expect(listResponse.body.data).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: createResponse.body.id,
+          id: createResponse.body.data.id,
           nombre,
         }),
       ]),
     );
+    expectMetadata(listResponse.body);
   });
 
   it('consulta un plato tipico existente', async () => {
@@ -92,13 +111,16 @@ describe('PlatosTipicosController (e2e)', () => {
     const getResponse = await supertest(
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
-      .get(`/platos-tipicos/${createResponse.body.id}`)
+      .get(`/platos-tipicos/${createResponse.body.data.id}`)
       .expect(200);
 
     expect(getResponse.body).toMatchObject({
-      id: createResponse.body.id,
-      nombre,
+      data: {
+        id: createResponse.body.data.id,
+        nombre,
+      },
     });
+    expectMetadata(getResponse.body);
   });
 
   it('devuelve 404 al consultar un plato tipico inexistente', async () => {
@@ -114,7 +136,7 @@ describe('PlatosTipicosController (e2e)', () => {
     const updateResponse = await supertest(
       app.getHttpServer() as Parameters<typeof supertest>[0],
     )
-      .patch(`/platos-tipicos/${createResponse.body.id}`)
+      .patch(`/platos-tipicos/${createResponse.body.data.id}`)
       .send({
         precio: 4.25,
         categoria: 'Sopa actualizada',
@@ -122,11 +144,14 @@ describe('PlatosTipicosController (e2e)', () => {
       .expect(200);
 
     expect(updateResponse.body).toMatchObject({
-      id: createResponse.body.id,
-      nombre,
-      precio: 4.25,
-      categoria: 'Sopa actualizada',
+      data: {
+        id: createResponse.body.data.id,
+        nombre,
+        precio: 4.25,
+        categoria: 'Sopa actualizada',
+      },
     });
+    expectMetadata(updateResponse.body);
   });
 
   it('devuelve 404 al actualizar un plato tipico inexistente', async () => {
@@ -139,13 +164,18 @@ describe('PlatosTipicosController (e2e)', () => {
   it('elimina un plato tipico existente', async () => {
     const nombre = `Encebollado Eliminar ${Date.now()}`;
     const createResponse = await createPlato(nombre);
-    const id = createResponse.body.id;
+    const id = createResponse.body.data.id;
     createdIds.splice(createdIds.indexOf(id), 1);
 
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .delete(`/platos-tipicos/${id}`)
       .expect(200)
-      .expect({ deleted: true, id });
+      .expect((response) => {
+        expect(response.body).toMatchObject({
+          data: { deleted: true, id },
+        });
+        expectMetadata(response.body);
+      });
 
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .get(`/platos-tipicos/${id}`)
@@ -168,13 +198,18 @@ describe('PlatosTipicosController (e2e)', () => {
   it('mantiene eliminado el plato tipico en SQLite despues de reiniciar', async () => {
     const nombre = `Encebollado Eliminar Persistente ${Date.now()}`;
     const createResponse = await createPlato(nombre);
-    const id = createResponse.body.id;
+    const id = createResponse.body.data.id;
     createdIds.splice(createdIds.indexOf(id), 1);
 
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .delete(`/platos-tipicos/${id}`)
       .expect(200)
-      .expect({ deleted: true, id });
+      .expect((response) => {
+        expect(response.body).toMatchObject({
+          data: { deleted: true, id },
+        });
+        expectMetadata(response.body);
+      });
 
     await app.close();
     app = await createApp();
@@ -197,17 +232,18 @@ describe('PlatosTipicosController (e2e)', () => {
       .get('/platos-tipicos')
       .expect(200);
 
-    expect(listResponse.body).toEqual(
+    expect(listResponse.body.data).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: createResponse.body.id,
+          id: createResponse.body.data.id,
           nombre,
         }),
       ]),
     );
+    expectMetadata(listResponse.body);
 
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
-      .delete(`/platos-tipicos/${createResponse.body.id}`)
+      .delete(`/platos-tipicos/${createResponse.body.data.id}`)
       .expect(200);
   });
 });

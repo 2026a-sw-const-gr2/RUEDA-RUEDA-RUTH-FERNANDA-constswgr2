@@ -17,6 +17,12 @@ Clasificacion inicial de deuda tecnica detectada en el CRUD persistente de plato
 | --- | --- | --- | --- |
 | El diagnostico marcaba riesgo de exito falso en `DELETE /platos-tipicos/:id` y falta de pruebas para confirmar eliminacion persistente. | Se agregaron pruebas e2e que verifican que `DELETE` elimina el registro, que el plato sigue eliminado tras reiniciar la aplicacion y que un id inexistente devuelve 404 sin `{ deleted: true }`. | El codigo actual ya usaba `findOne` antes de eliminar y `remove` de TypeORM, por lo que el fallo funcional no se reprodujo. La correccion minima fue fortalecer la prueba correctiva y confirmar GREEN. | Mayor confianza en el comportamiento de eliminacion y en el manejo controlado de errores sin cambiar contratos del CRUD. |
 
+## Mantenimiento adaptativo aplicado en Fase 7
+
+| Antes | Despues | Justificacion | Impacto |
+| --- | --- | --- | --- |
+| Las respuestas del CRUD devolvian datos directos sin metadata y no habia integracion desde platos tipicos hacia el modulo `events`. | Las respuestas devuelven `{ data, metadata }`, la metadata usa `timestampISO`, `timezone`, `apiVersion`, `environment` e `integrationTarget`, y `PlatosTipicosService` registra eventos internos con `EventsService`. | El CRUD debe integrarse con EPN Event Manager sin cambiar los campos oficiales de `PlatoTipico`. La metadata se mantiene separada del modelo principal. | API mas adaptable para integraciones, respuestas con contexto uniforme y pruebas automatizadas de metadata. |
+
 ## Orden sugerido
 
 1. Ampliar pruebas del CRUD y errores.

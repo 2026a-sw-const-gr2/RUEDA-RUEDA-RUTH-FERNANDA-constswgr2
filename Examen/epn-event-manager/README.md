@@ -8,7 +8,7 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 5 completada: se crearon y ejecutaron pruebas TDD base para el CRUD inicial persistente de platos tipicos ecuatorianos.
+Fase 7 completada: se aplico mantenimiento adaptativo para integrar el CRUD con el hub de eventos EPN Event Manager mediante metadata estandarizada.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
@@ -34,6 +34,27 @@ Campos oficiales:
 No se deben agregar como campos obligatorios del recurso: `provincia`, `disponible`, `createdAt`, `updatedAt`.
 
 Los timestamps ISO 8601 se usaran solo en logs, metadata adaptativa o auditoria cuando una fase lo solicite.
+
+## Metadata adaptativa
+
+Las respuestas de `POST`, `GET`, `PATCH` y `DELETE` usan esta estructura:
+
+```json
+{
+  "data": {},
+  "metadata": {
+    "source": "platos-tipicos-crud",
+    "system": "Sistema de Platos Típicos Ecuatorianos",
+    "apiVersion": "v1",
+    "timestampISO": "2026-06-02T01:40:00.000Z",
+    "timezone": "America/Guayaquil",
+    "environment": "development",
+    "integrationTarget": "EPN Event Manager"
+  }
+}
+```
+
+La metadata no forma parte del modelo `PlatoTipico`; el plato se mantiene dentro de `data`.
 
 ## Estructura real del proyecto
 
@@ -119,6 +140,32 @@ Ejemplo de creacion:
 curl -X POST http://localhost:3000/platos-tipicos \
   -H "Content-Type: application/json" \
   -d "{\"nombre\":\"Encebollado\",\"descripcion\":\"Plato tradicional de la Costa ecuatoriana.\",\"region\":\"Costa\",\"ingredientes\":\"Pescado, yuca, cebolla, tomate y limon\",\"precio\":3.5,\"imagenUrl\":\"https://example.com/encebollado.jpg\",\"categoria\":\"Sopa tradicional\"}"
+```
+
+Respuesta esperada:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "nombre": "Encebollado",
+    "descripcion": "Plato tradicional de la Costa ecuatoriana.",
+    "region": "Costa",
+    "ingredientes": "Pescado, yuca, cebolla, tomate y limon",
+    "precio": 3.5,
+    "imagenUrl": "https://example.com/encebollado.jpg",
+    "categoria": "Sopa tradicional"
+  },
+  "metadata": {
+    "source": "platos-tipicos-crud",
+    "system": "Sistema de Platos Típicos Ecuatorianos",
+    "apiVersion": "v1",
+    "timestampISO": "2026-06-02T01:40:00.000Z",
+    "timezone": "America/Guayaquil",
+    "environment": "development",
+    "integrationTarget": "EPN Event Manager"
+  }
+}
 ```
 
 Listar platos:
@@ -219,11 +266,11 @@ Pruebas e2e:
 npm run test:e2e
 ```
 
-Resultado Fase 5:
+Resultado Fase 7:
 
 ```text
 Test Suites: 2 passed, 2 total
-Tests: 10 passed, 10 total
+Tests: 11 passed, 11 total
 Estado TDD: GREEN
 ```
 
@@ -272,7 +319,7 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 4 | Diagnostico de deuda tecnica | Completada |
 | Fase 5 | Crear pruebas TDD base del CRUD inicial | Completada |
 | Fase 6 | Mantenimiento correctivo | Completada |
-| Fase 7 | Mantenimiento adaptativo | Pendiente |
+| Fase 7 | Mantenimiento adaptativo | Completada |
 | Fase 8 | Mantenimiento perfectivo | Pendiente |
 | Fase 9 | Mantenimiento preventivo | Pendiente |
 | Fase 10 | Logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
