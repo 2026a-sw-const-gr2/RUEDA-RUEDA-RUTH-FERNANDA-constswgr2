@@ -16,7 +16,11 @@ export class ApiKeyGuard implements CanActivate {
     const expectedApiKey = process.env.FIS_EPN_API_KEY;
     const providedApiKey = request.header('X-FIS-EPN-KEY');
 
-    if (!expectedApiKey || !providedApiKey || providedApiKey !== expectedApiKey) {
+    if (
+      !expectedApiKey ||
+      !providedApiKey ||
+      providedApiKey !== expectedApiKey
+    ) {
       this.logWarn('API Key invalida o ausente', request.path);
       throw new UnauthorizedException('API Key invalida o ausente');
     }

@@ -428,6 +428,35 @@ Impacto:
 - El build del frontend pasa correctamente.
 - Estado Fase 13: GREEN.
 
+## GitHub Actions Fase 14
+
+En Fase 14 se creo integracion continua para validar backend NestJS y frontend Node.js.
+
+Antes:
+
+- No existia workflow de GitHub Actions.
+- La validacion del backend y frontend se ejecutaba solo localmente.
+
+Despues:
+
+- Se creo `.github/workflows/node-ci.yml` en la raiz del repositorio.
+- El workflow se ejecuta en `push` y `pull_request`.
+- Usa Node.js 20.
+- Usa `Examen/epn-event-manager` como `working-directory` principal.
+- Instala dependencias del backend con `npm ci`.
+- Ejecuta `npm run lint`, `npm test` y `npm run build` en el backend.
+- Entra a `frontend/`, instala dependencias con `npm ci` y ejecuta `npm run build`.
+- No ejecuta pruebas de frontend porque no existe script de pruebas frontend.
+
+Justificacion:
+
+- El cambio automatiza la validacion minima del backend y frontend sin inventar scripts inexistentes.
+
+Impacto:
+
+- Cada `push` o `pull_request` validara instalacion, lint, pruebas y build del backend, ademas del build del frontend.
+- Estado Fase 14: GREEN local y workflow configurado.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -511,4 +540,5 @@ npm run build
 | Fase 11 | Agregar logs y trazabilidad | Completada |
 | Fase 12 | Agregar Swagger / OpenAPI | Completada |
 | Fase 13 | Agregar frontend con Node.js y Vite | Completada |
-| Fase 14 | Agregar GitHub Actions y documentacion final | Pendiente |
+| Fase 14 | Agregar GitHub Actions para backend y frontend | Completada |
+| Fase 15 | Agregar documentacion final | Pendiente |

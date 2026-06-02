@@ -8,11 +8,41 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 13 completada: se creo un frontend con Node.js, Vite y JavaScript simple.
+Fase 14 completada: se creo integracion continua con GitHub Actions para backend y frontend.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
-No existe GitHub Actions en esta fase.
+## GitHub Actions
+
+La integracion continua esta configurada en:
+
+```text
+.github/workflows/node-ci.yml
+```
+
+Se ejecuta en:
+
+- `push`
+- `pull_request`
+
+Usa Node.js 20 y valida:
+
+- backend NestJS con `npm ci`;
+- lint del backend con `npm run lint`;
+- pruebas del backend con `npm test`;
+- build del backend con `npm run build`;
+- frontend Vite con `npm ci`;
+- build del frontend con `npm run build`.
+
+El workflow usa como directorio de trabajo principal:
+
+```text
+Examen/epn-event-manager
+```
+
+No ejecuta pruebas de frontend porque el frontend no tiene script de pruebas configurado.
+
+No ejecuta scripts inventados.
 
 ## Frontend
 
@@ -245,7 +275,7 @@ epn-event-manager/
 - Existen pruebas Jest unitarias en `src` y e2e en `test`.
 - Existe `src/modules/platos-tipicos` con controller, service y DTOs.
 - Existe frontend Vite en `frontend`.
-- No existe configuracion de GitHub Actions en esta fase.
+- Existe integracion continua en `.github/workflows/node-ci.yml`.
 
 ## Ubicacion del CRUD inicial
 
@@ -479,6 +509,18 @@ Backend e2e: 24 passed
 Estado: GREEN
 ```
 
+Resultado Fase 14:
+
+```text
+Backend npm ci: paso
+Backend lint: paso
+Backend test: 1 passed
+Backend build: paso
+Frontend npm ci: paso
+Frontend build: paso
+Estado CI: configurado
+```
+
 Cobertura:
 
 ```bash
@@ -531,7 +573,8 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 11 | Logs y trazabilidad | Completada |
 | Fase 12 | Swagger / OpenAPI | Completada |
 | Fase 13 | Frontend con Node.js y Vite | Completada |
-| Fase 14 | GitHub Actions y documentacion final | Pendiente |
+| Fase 14 | GitHub Actions para backend y frontend | Completada |
+| Fase 15 | Documentacion final | Pendiente |
 
 ## Git
 

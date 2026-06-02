@@ -214,20 +214,30 @@ export class PlatosTipicosService {
         '/platos-tipicos',
         'El precio debe ser un numero mayor o igual a 0',
       );
-      throw new BadRequestException('El precio debe ser un numero mayor o igual a 0');
+      throw new BadRequestException(
+        'El precio debe ser un numero mayor o igual a 0',
+      );
     }
   }
 
   private sanitizeTextField(field: TextField, value: unknown): string {
     if (typeof value !== 'string') {
-      this.logWarn('VALIDATION', '/platos-tipicos', `El campo ${field} es obligatorio`);
+      this.logWarn(
+        'VALIDATION',
+        '/platos-tipicos',
+        `El campo ${field} es obligatorio`,
+      );
       throw new BadRequestException(`El campo ${field} es obligatorio`);
     }
 
     const sanitized = value.trim();
 
     if (sanitized.length === 0) {
-      this.logWarn('VALIDATION', '/platos-tipicos', `El campo ${field} es obligatorio`);
+      this.logWarn(
+        'VALIDATION',
+        '/platos-tipicos',
+        `El campo ${field} es obligatorio`,
+      );
       throw new BadRequestException(`El campo ${field} es obligatorio`);
     }
 
@@ -292,7 +302,9 @@ export class PlatosTipicosService {
         '/platos-tipicos',
         'El campo imagenUrl debe ser una URL valida',
       );
-      throw new BadRequestException('El campo imagenUrl debe ser una URL valida');
+      throw new BadRequestException(
+        'El campo imagenUrl debe ser una URL valida',
+      );
     }
   }
 
@@ -394,9 +406,13 @@ export class PlatosTipicosService {
     error: unknown,
     platoId?: number,
   ): void {
-    const message = error instanceof Error ? error.message : 'Error no identificado';
+    const message =
+      error instanceof Error ? error.message : 'Error no identificado';
 
-    if (error instanceof BadRequestException || error instanceof NotFoundException) {
+    if (
+      error instanceof BadRequestException ||
+      error instanceof NotFoundException
+    ) {
       this.logWarn(action, route, message, platoId);
       return;
     }
