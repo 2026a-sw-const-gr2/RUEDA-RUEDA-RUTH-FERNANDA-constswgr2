@@ -8,7 +8,7 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 3 completada: se probo el CRUD inicial persistente de platos tipicos ecuatorianos.
+Fase 5 completada: se crearon y ejecutaron pruebas TDD base para el CRUD inicial persistente de platos tipicos ecuatorianos.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
@@ -219,6 +219,14 @@ Pruebas e2e:
 npm run test:e2e
 ```
 
+Resultado Fase 5:
+
+```text
+Test Suites: 2 passed, 2 total
+Tests: 10 passed, 10 total
+Estado TDD: GREEN
+```
+
 Cobertura:
 
 ```bash
@@ -261,9 +269,10 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 1 | Revision de estructura real | Completada |
 | Fase 2 | Crear CRUD inicial persistente | Completada |
 | Fase 3 | Probar CRUD inicial y persistencia | Completada |
-| Fase 4 | Diagnostico de deuda tecnica | Pendiente |
-| Fase 5 | Mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
-| Fase 6 | Pruebas, logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
+| Fase 4 | Diagnostico de deuda tecnica | Completada |
+| Fase 5 | Crear pruebas TDD base del CRUD inicial | Completada |
+| Fase 6 | Mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
+| Fase 7 | Logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
 
 ## Git
 

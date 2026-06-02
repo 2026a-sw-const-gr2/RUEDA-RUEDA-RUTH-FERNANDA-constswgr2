@@ -140,6 +140,30 @@ Documentos creados:
 - `docs/DIAGNOSTICO_DEUDA_TECNICA.md`
 - `docs/TABLA_MANTENIMIENTO.md`
 
+## Pruebas TDD base Fase 5
+
+En Fase 5 se ampliaron las pruebas e2e del CRUD inicial persistente en `test/platos-tipicos.e2e-spec.ts`.
+
+Pruebas agregadas o confirmadas:
+
+- Crear plato tipico.
+- Listar platos tipicos.
+- Consultar plato tipico existente.
+- Consultar plato tipico inexistente.
+- Actualizar plato tipico existente.
+- Actualizar plato tipico inexistente.
+- Eliminar plato tipico existente.
+- Eliminar plato tipico inexistente.
+- Verificar persistencia en SQLite despues de reiniciar la aplicacion Nest.
+
+Resultado de ejecucion:
+
+- `npm run test:e2e`: 2 suites pasaron, 10 pruebas pasaron.
+- `npm test`: 1 suite paso, 1 prueba paso.
+- Estado TDD de Fase 5: GREEN.
+
+No fue necesario modificar logica del CRUD para que las pruebas pasen.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -205,5 +229,6 @@ npm run format
 | Fase 2 | Crear CRUD inicial persistente de platos tipicos ecuatorianos | Completada |
 | Fase 3 | Probar CRUD inicial y persistencia | Completada |
 | Fase 4 | Diagnosticar deuda tecnica del CRUD inicial | Completada |
-| Fase 5 | Aplicar mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
-| Fase 6 | Agregar pruebas, logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |
+| Fase 5 | Crear pruebas TDD base del CRUD inicial | Completada |
+| Fase 6 | Aplicar mantenimientos correctivo, adaptativo, perfectivo y preventivo | Pendiente |
+| Fase 7 | Agregar logs, seguridad, Swagger, GitHub Actions y documentacion final | Pendiente |

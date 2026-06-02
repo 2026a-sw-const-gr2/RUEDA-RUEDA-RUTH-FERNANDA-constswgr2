@@ -52,20 +52,39 @@ npm run test:debug
 
 ## Pruebas esperadas del CRUD inicial
 
-El CRUD inicial persistente ya incluye una prueba e2e para:
+El CRUD inicial persistente ya incluye pruebas e2e para:
 
 - Crear plato tipico.
 - Listar platos tipicos.
-- Verificar persistencia SQLite despues de reiniciar.
-
-Pruebas pendientes para ampliar cobertura del CRUD inicial:
-
 - Consultar plato tipico existente.
 - Consultar plato tipico inexistente.
 - Actualizar plato tipico existente.
 - Actualizar plato tipico inexistente.
 - Eliminar plato tipico existente.
 - Eliminar plato tipico inexistente.
+- Verificar persistencia SQLite despues de reiniciar.
+
+Estado TDD Fase 5: GREEN.
+
+Resultado documentado:
+
+- `npm run test:e2e`: 2 suites pasaron, 10 pruebas pasaron.
+- `npm test`: 1 suite paso, 1 prueba paso.
+- No fue necesario corregir logica del CRUD para pasar estas pruebas base.
+
+## Checklist TDD Fase 5
+
+- [x] Crear prueba para crear plato tipico.
+- [x] Crear prueba para listar platos tipicos.
+- [x] Crear prueba para consultar plato tipico existente.
+- [x] Crear prueba para consultar plato tipico inexistente.
+- [x] Crear prueba para actualizar plato tipico existente.
+- [x] Crear prueba para actualizar plato tipico inexistente.
+- [x] Crear prueba para eliminar plato tipico existente.
+- [x] Crear prueba para eliminar plato tipico inexistente.
+- [x] Crear prueba para verificar persistencia en SQLite.
+- [x] Ejecutar pruebas.
+- [x] Documentar resultado RED/GREEN.
 
 ## Checklist de persistencia Fase 3
 
