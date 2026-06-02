@@ -372,3 +372,4 @@ curl http://localhost:3000/platos-tipicos \
 | Fase 14 | GitHub Actions | Completada |
 | Fase 15 | Pruebas manuales API | Completada |
 | Fase 16 | Documentacion final | Completada |
+| Fase 17 | Revision final | Completada |
