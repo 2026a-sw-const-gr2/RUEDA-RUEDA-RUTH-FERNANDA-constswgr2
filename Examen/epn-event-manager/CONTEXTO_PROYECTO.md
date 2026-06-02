@@ -313,6 +313,35 @@ Impacto:
 - Las pruebas de seguridad quedan automatizadas.
 - Estado TDD Fase 10: RED confirmado por acceso sin clave; GREEN confirmado despues de implementar.
 
+## Logs y trazabilidad Fase 11
+
+En Fase 11 se agregaron logs estructurados para observar el comportamiento del CRUD.
+
+Antes:
+
+- Las operaciones del CRUD no generaban logs estructurados.
+- Los errores de API Key y validacion no quedaban registrados.
+- No habia trazabilidad por accion, ruta o id del plato.
+
+Despues:
+
+- `PlatosTipicosService` registra `CREATE`, `QUERY`, `UPDATE` y `DELETE`.
+- `ApiKeyGuard` registra intentos fallidos de API Key.
+- Las validaciones registran logs `WARN`.
+- Los errores no controlados se registran con nivel `ERROR`.
+- Cada log incluye `level`, `timestampISO`, `route`, `action`, `platoId` cuando aplica y `message`.
+- Se agregaron pruebas e2e para validar logs principales.
+
+Justificacion:
+
+- El cambio mejora la observabilidad del CRUD sin agregar dependencias pesadas.
+
+Impacto:
+
+- El proyecto permite evidenciar trazabilidad desde consola con `npm run start:dev`.
+- Las pruebas del backend se mantienen en GREEN.
+- Estado TDD Fase 11: GREEN.
+
 ## Comandos reales identificados
 
 Instalacion:
@@ -384,4 +413,5 @@ npm run format
 | Fase 8 | Aplicar mantenimiento perfectivo | Completada |
 | Fase 9 | Aplicar mantenimiento preventivo | Completada |
 | Fase 10 | Agregar seguridad por API Key | Completada |
-| Fase 11 | Agregar logs, Swagger, GitHub Actions y documentacion final | Pendiente |
+| Fase 11 | Agregar logs y trazabilidad | Completada |
+| Fase 12 | Agregar Swagger, GitHub Actions, frontend y documentacion final | Pendiente |

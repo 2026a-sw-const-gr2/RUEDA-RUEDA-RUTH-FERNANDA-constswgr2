@@ -8,7 +8,7 @@ El objetivo es construir primero un CRUD inicial persistente de platos tipicos e
 
 ## Estado actual
 
-Fase 10 completada: se agrego seguridad por API Key usando la cabecera `X-FIS-EPN-KEY`.
+Fase 11 completada: se agregaron logs estructurados y trazabilidad para el CRUD.
 
 El CRUD funciona con NestJS, TypeORM y SQLite. La base de datos se guarda en `db/platos-tipicos.sqlite`, por lo que los platos no se pierden al reiniciar el servidor.
 
@@ -46,6 +46,37 @@ curl http://localhost:3000/platos-tipicos \
 Sin API Key o con una API Key incorrecta, el CRUD responde `401 Unauthorized`.
 
 El endpoint `GET /health` queda libre para verificacion basica del servicio.
+
+## Logs y trazabilidad
+
+El CRUD registra logs estructurados usando `Logger` de NestJS.
+
+Cada log usa formato JSON e incluye:
+
+- `level`: `INFO`, `WARN` o `ERROR`.
+- `timestampISO`: fecha en formato ISO 8601.
+- `route`: ruta relacionada.
+- `action`: `CREATE`, `READ`, `UPDATE`, `DELETE`, `VALIDATION` o `API_KEY_VALIDATION`.
+- `platoId`: id del plato cuando aplica.
+- `message`: descripcion corta del evento.
+
+Se registran:
+
+- Operaciones exitosas del CRUD con nivel `INFO`.
+- Intentos fallidos, ids inexistentes, validaciones y API Key invalida con nivel `WARN`.
+- Errores no controlados con nivel `ERROR`.
+
+Para evidenciar la trazabilidad, ejecutar el backend y realizar operaciones con `curl`. Los logs aparecen en consola:
+
+```bash
+npm run start:dev
+```
+
+Ejemplo de log:
+
+```json
+{"level":"INFO","timestampISO":"2026-06-02T01:50:00.000Z","route":"/platos-tipicos","action":"CREATE","platoId":1,"message":"Operacion CREATE ejecutada"}
+```
 
 ## Recurso principal
 
@@ -313,7 +344,8 @@ npm run start:dev
 5. Consultar:
 
 ```bash
-curl http://localhost:3000/platos-tipicos
+curl http://localhost:3000/platos-tipicos \
+  -H "X-FIS-EPN-KEY: clave-de-prueba"
 ```
 
 El plato creado debe seguir apareciendo porque se guarda en `db/platos-tipicos.sqlite`.
@@ -364,7 +396,7 @@ Pruebas e2e:
 npm run test:e2e
 ```
 
-Resultado Fase 10:
+Resultado Fase 11:
 
 ```text
 Test Suites: 2 passed, 2 total
@@ -421,7 +453,8 @@ El plan de pruebas se mantiene en `PLAN_TDD.md`.
 | Fase 8 | Mantenimiento perfectivo | Completada |
 | Fase 9 | Mantenimiento preventivo | Completada |
 | Fase 10 | Seguridad por API Key | Completada |
-| Fase 11 | Logs, Swagger, GitHub Actions y documentacion final | Pendiente |
+| Fase 11 | Logs y trazabilidad | Completada |
+| Fase 12 | Swagger, GitHub Actions, frontend y documentacion final | Pendiente |
 
 ## Git
 

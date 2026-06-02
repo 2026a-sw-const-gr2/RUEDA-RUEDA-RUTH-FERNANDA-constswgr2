@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PlatoTipicoEntity } from '../../database/entities/plato-tipico.entity';
@@ -7,6 +12,7 @@ import { CreatePlatoTipicoDto } from './dto/create-plato-tipico.dto';
 import { UpdatePlatoTipicoDto } from './dto/update-plato-tipico.dto';
 
 type PlatoTipicoAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'QUERY';
+type LogAction = PlatoTipicoAction | 'READ' | 'VALIDATION';
 type TextField = Exclude<keyof CreatePlatoTipicoDto, 'precio'>;
 
 export interface PlatosTipicosStats {
@@ -36,6 +42,8 @@ export interface ResponseWithMetadata<T> {
 
 @Injectable()
 export class PlatosTipicosService {
+  private readonly logger = new Logger(PlatosTipicosService.name);
+
   constructor(
     @InjectRepository(PlatoTipicoEntity)
     private readonly platosRepo: Repository<PlatoTipicoEntity>,
@@ -45,41 +53,65 @@ export class PlatosTipicosService {
   async create(
     dto: CreatePlatoTipicoDto,
   ): Promise<ResponseWithMetadata<PlatoTipicoEntity>> {
-    const sanitizedDto = this.sanitizeCreateDto(dto);
-    const plato = this.platosRepo.create({
-      ...sanitizedDto,
-      precio: Number(sanitizedDto.precio),
-    });
-    const saved = await this.platosRepo.save(plato);
-    return this.withMetadata(saved, 'CREATE', saved.id);
+    try {
+      const sanitizedDto = this.sanitizeCreateDto(dto);
+      const plato = this.platosRepo.create({
+        ...sanitizedDto,
+        precio: Number(sanitizedDto.precio),
+      });
+      const saved = await this.platosRepo.save(plato);
+      this.logInfo('CREATE', '/platos-tipicos', saved.id);
+      return this.withMetadata(saved, 'CREATE', saved.id);
+    } catch (error) {
+      this.logOperationError('CREATE', '/platos-tipicos', error);
+      throw error;
+    }
   }
 
   async findAll(): Promise<ResponseWithMetadata<PlatoTipicoEntity[]>> {
-    const platos = await this.platosRepo.find({ order: { id: 'ASC' } });
-    return this.withMetadata(platos, 'QUERY');
+    try {
+      const platos = await this.platosRepo.find({ order: { id: 'ASC' } });
+      this.logInfo('READ', '/platos-tipicos');
+      return this.withMetadata(platos, 'QUERY');
+    } catch (error) {
+      this.logOperationError('READ', '/platos-tipicos', error);
+      throw error;
+    }
   }
 
   async findOne(id: number): Promise<ResponseWithMetadata<PlatoTipicoEntity>> {
-    const plato = await this.findEntityById(id);
-    return this.withMetadata(plato, 'QUERY', id);
+    try {
+      const plato = await this.findEntityById(id);
+      this.logInfo('READ', '/platos-tipicos/:id', id);
+      return this.withMetadata(plato, 'QUERY', id);
+    } catch (error) {
+      this.logOperationError('READ', '/platos-tipicos/:id', error, id);
+      throw error;
+    }
   }
 
   async getStats(): Promise<ResponseWithMetadata<PlatosTipicosStats>> {
-    const platos = await this.platosRepo.find();
-    const precios = platos.map((plato) => Number(plato.precio));
-    const totalPrecio = precios.reduce((total, precio) => total + precio, 0);
-    const totalPlatos = platos.length;
-    const stats: PlatosTipicosStats = {
-      totalPlatos,
-      precioPromedio: totalPlatos === 0 ? 0 : totalPrecio / totalPlatos,
-      precioMinimo: totalPlatos === 0 ? 0 : Math.min(...precios),
-      precioMaximo: totalPlatos === 0 ? 0 : Math.max(...precios),
-      platosPorRegion: this.countBy(platos, 'region'),
-      platosPorCategoria: this.countBy(platos, 'categoria'),
-      generatedAt: new Date().toISOString(),
-    };
+    try {
+      const platos = await this.platosRepo.find();
+      const precios = platos.map((plato) => Number(plato.precio));
+      const totalPrecio = precios.reduce((total, precio) => total + precio, 0);
+      const totalPlatos = platos.length;
+      const stats: PlatosTipicosStats = {
+        totalPlatos,
+        precioPromedio: totalPlatos === 0 ? 0 : totalPrecio / totalPlatos,
+        precioMinimo: totalPlatos === 0 ? 0 : Math.min(...precios),
+        precioMaximo: totalPlatos === 0 ? 0 : Math.max(...precios),
+        platosPorRegion: this.countBy(platos, 'region'),
+        platosPorCategoria: this.countBy(platos, 'categoria'),
+        generatedAt: new Date().toISOString(),
+      };
 
-    return this.withMetadata(stats, 'QUERY');
+      this.logInfo('READ', '/platos-tipicos/stats');
+      return this.withMetadata(stats, 'QUERY');
+    } catch (error) {
+      this.logOperationError('READ', '/platos-tipicos/stats', error);
+      throw error;
+    }
   }
 
   private async findEntityById(id: number): Promise<PlatoTipicoEntity> {
@@ -96,25 +128,37 @@ export class PlatosTipicosService {
     id: number,
     dto: UpdatePlatoTipicoDto,
   ): Promise<ResponseWithMetadata<PlatoTipicoEntity>> {
-    const sanitizedDto = this.sanitizeUpdateDto(dto);
-    const plato = await this.findEntityById(id);
-    Object.assign(plato, {
-      ...sanitizedDto,
-      precio:
-        sanitizedDto.precio === undefined
-          ? plato.precio
-          : Number(sanitizedDto.precio),
-    });
-    const saved = await this.platosRepo.save(plato);
-    return this.withMetadata(saved, 'UPDATE', id);
+    try {
+      const sanitizedDto = this.sanitizeUpdateDto(dto);
+      const plato = await this.findEntityById(id);
+      Object.assign(plato, {
+        ...sanitizedDto,
+        precio:
+          sanitizedDto.precio === undefined
+            ? plato.precio
+            : Number(sanitizedDto.precio),
+      });
+      const saved = await this.platosRepo.save(plato);
+      this.logInfo('UPDATE', '/platos-tipicos/:id', id);
+      return this.withMetadata(saved, 'UPDATE', id);
+    } catch (error) {
+      this.logOperationError('UPDATE', '/platos-tipicos/:id', error, id);
+      throw error;
+    }
   }
 
   async remove(
     id: number,
   ): Promise<ResponseWithMetadata<{ deleted: boolean; id: number }>> {
-    const plato = await this.findEntityById(id);
-    await this.platosRepo.remove(plato);
-    return this.withMetadata({ deleted: true, id }, 'DELETE', id);
+    try {
+      const plato = await this.findEntityById(id);
+      await this.platosRepo.remove(plato);
+      this.logInfo('DELETE', '/platos-tipicos/:id', id);
+      return this.withMetadata({ deleted: true, id }, 'DELETE', id);
+    } catch (error) {
+      this.logOperationError('DELETE', '/platos-tipicos/:id', error, id);
+      throw error;
+    }
   }
 
   private sanitizeCreateDto(dto: CreatePlatoTipicoDto): CreatePlatoTipicoDto {
@@ -165,18 +209,25 @@ export class PlatosTipicosService {
     const numericPrice = Number(precio);
 
     if (Number.isNaN(numericPrice) || numericPrice < 0) {
+      this.logWarn(
+        'VALIDATION',
+        '/platos-tipicos',
+        'El precio debe ser un numero mayor o igual a 0',
+      );
       throw new BadRequestException('El precio debe ser un numero mayor o igual a 0');
     }
   }
 
   private sanitizeTextField(field: TextField, value: unknown): string {
     if (typeof value !== 'string') {
+      this.logWarn('VALIDATION', '/platos-tipicos', `El campo ${field} es obligatorio`);
       throw new BadRequestException(`El campo ${field} es obligatorio`);
     }
 
     const sanitized = value.trim();
 
     if (sanitized.length === 0) {
+      this.logWarn('VALIDATION', '/platos-tipicos', `El campo ${field} es obligatorio`);
       throw new BadRequestException(`El campo ${field} es obligatorio`);
     }
 
@@ -202,6 +253,11 @@ export class PlatosTipicosService {
     const limit = limits[field];
 
     if (limit !== undefined && value.length > limit) {
+      this.logWarn(
+        'VALIDATION',
+        '/platos-tipicos',
+        `El campo ${field} no debe superar ${limit} caracteres`,
+      );
       throw new BadRequestException(
         `El campo ${field} no debe superar ${limit} caracteres`,
       );
@@ -212,6 +268,11 @@ export class PlatosTipicosService {
     const dangerousPattern = /<\s*script\b|\b(SELECT|DROP|INSERT)\b|--/i;
 
     if (dangerousPattern.test(value)) {
+      this.logWarn(
+        'VALIDATION',
+        '/platos-tipicos',
+        `El campo ${field} contiene texto no permitido`,
+      );
       throw new BadRequestException(
         `El campo ${field} contiene texto no permitido`,
       );
@@ -226,6 +287,11 @@ export class PlatosTipicosService {
         throw new Error('Invalid protocol');
       }
     } catch {
+      this.logWarn(
+        'VALIDATION',
+        '/platos-tipicos',
+        'El campo imagenUrl debe ser una URL valida',
+      );
       throw new BadRequestException('El campo imagenUrl debe ser una URL valida');
     }
   }
@@ -271,5 +337,70 @@ export class PlatosTipicosService {
     });
 
     return { data, metadata };
+  }
+
+  private logInfo(action: LogAction, route: string, platoId?: number): void {
+    this.logger.log(
+      JSON.stringify({
+        level: 'INFO',
+        timestampISO: new Date().toISOString(),
+        route,
+        action,
+        platoId,
+        message: `Operacion ${action} ejecutada`,
+      }),
+    );
+  }
+
+  private logWarn(
+    action: LogAction,
+    route: string,
+    message: string,
+    platoId?: number,
+  ): void {
+    this.logger.warn(
+      JSON.stringify({
+        level: 'WARN',
+        timestampISO: new Date().toISOString(),
+        route,
+        action,
+        platoId,
+        message,
+      }),
+    );
+  }
+
+  private logError(
+    action: LogAction,
+    route: string,
+    message: string,
+    platoId?: number,
+  ): void {
+    this.logger.error(
+      JSON.stringify({
+        level: 'ERROR',
+        timestampISO: new Date().toISOString(),
+        route,
+        action,
+        platoId,
+        message,
+      }),
+    );
+  }
+
+  private logOperationError(
+    action: LogAction,
+    route: string,
+    error: unknown,
+    platoId?: number,
+  ): void {
+    const message = error instanceof Error ? error.message : 'Error no identificado';
+
+    if (error instanceof BadRequestException || error instanceof NotFoundException) {
+      this.logWarn(action, route, message, platoId);
+      return;
+    }
+
+    this.logError(action, route, message, platoId);
   }
 }

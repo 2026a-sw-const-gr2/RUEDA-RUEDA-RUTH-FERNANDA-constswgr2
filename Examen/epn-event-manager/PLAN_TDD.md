@@ -180,7 +180,6 @@ Resultado documentado:
 - [x] Rechaza patrones peligrosos como `SELECT`, `DROP`, `INSERT` o `--`.
 - [x] Rechaza textos demasiado largos.
 - [x] Aplica `trim` a textos antes de guardar.
-- Registra logs estructurados para creacion, consulta, actualizacion, eliminacion y errores.
 
 Estado TDD Fase 9: RED -> GREEN.
 
@@ -207,6 +206,23 @@ Resultado documentado:
 - GREEN: `npm run test:e2e` paso con 2 suites y 23 pruebas.
 - `npm test`: 1 suite paso, 1 prueba paso.
 - `npm run build`: paso correctamente.
+
+## Pruebas de logs y trazabilidad
+
+- [x] Registra log `INFO` para operacion `CREATE`.
+- [x] Registra `timestampISO`, `route`, `action` y `platoId` cuando aplica.
+- [x] Registra log `WARN` cuando falta API Key.
+- [x] Registra log `WARN` cuando falla una validacion.
+- [x] Mantiene pruebas del CRUD pasando.
+
+Estado TDD Fase 11: GREEN.
+
+Resultado documentado:
+
+- `npm run build`: paso correctamente.
+- `npm test`: 1 suite paso, 1 prueba paso.
+- `npm run test:e2e`: 2 suites pasaron, 23 pruebas pasaron.
+- La evidencia manual se obtiene observando la consola con `npm run start:dev`.
 
 ## Diagnostico Fase 4
 

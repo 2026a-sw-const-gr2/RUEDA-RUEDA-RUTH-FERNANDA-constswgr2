@@ -244,3 +244,30 @@ El cambio agrega seguridad basica configurable por entorno y mantiene libre el e
 ### Impacto
 
 El CRUD queda protegido contra accesos sin clave. Las pruebas quedaron en GREEN con 23 pruebas e2e pasando.
+
+## Actualizacion Fase 11: logs y trazabilidad
+
+### Antes
+
+El CRUD no registraba operaciones ni errores con una estructura consistente. Tampoco habia trazabilidad clara para API Key, validaciones o acciones por id.
+
+### Prueba de trazabilidad
+
+Se agregaron pruebas e2e para confirmar:
+
+- log `INFO` en una operacion `CREATE`;
+- log `WARN` cuando falta API Key;
+- log `WARN` cuando falla una validacion;
+- presencia de `timestampISO`, `route`, `action` y `platoId` cuando aplica.
+
+### Despues
+
+`PlatosTipicosService` registra operaciones `CREATE`, `QUERY`, `UPDATE` y `DELETE`. `ApiKeyGuard` registra intentos fallidos de API Key. Las validaciones registran advertencias antes de devolver errores controlados.
+
+### Justificacion
+
+El cambio mejora la observabilidad sin agregar dependencias pesadas y permite revisar el comportamiento del CRUD desde consola.
+
+### Impacto
+
+El CRUD queda trazable para operaciones exitosas, errores controlados, API Key y validaciones. Las pruebas quedaron en GREEN con 23 pruebas e2e pasando.

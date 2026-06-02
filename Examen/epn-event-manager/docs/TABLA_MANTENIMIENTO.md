@@ -41,6 +41,12 @@ Clasificacion inicial de deuda tecnica detectada en el CRUD persistente de plato
 | --- | --- | --- | --- |
 | Los endpoints del CRUD estaban abiertos y no validaban `X-FIS-EPN-KEY`. | Se agrego `ApiKeyGuard`, se lee `FIS_EPN_API_KEY` desde entorno, se protege `PlatosTipicosController` y `GET /health` queda libre. | La API Key reduce accesos no autorizados a operaciones del CRUD sin bloquear health checks. | Mayor seguridad basica, pruebas automatizadas de 401 y configuracion documentada en `.env.example`. |
 
+## Logs y trazabilidad aplicados en Fase 11
+
+| Antes | Despues | Justificacion | Impacto |
+| --- | --- | --- | --- |
+| El CRUD no registraba operaciones, errores, intentos fallidos ni validaciones con una estructura consistente. | Se agregaron logs JSON con `level`, `timestampISO`, `route`, `action`, `platoId` y `message` usando `Logger` de NestJS. | Es preventivo porque mejora la observabilidad y permite diagnosticar fallos futuros sin agregar dependencias pesadas. | Mayor trazabilidad de CREATE, READ, UPDATE, DELETE, API Key y validaciones; pruebas e2e verifican los logs principales. |
+
 ## Orden sugerido
 
 1. Ampliar pruebas del CRUD y errores.

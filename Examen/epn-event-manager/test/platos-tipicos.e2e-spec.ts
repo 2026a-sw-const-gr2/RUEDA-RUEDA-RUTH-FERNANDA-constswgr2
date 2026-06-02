@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import supertest from 'supertest';
 import { AppModule } from './../src/app.module';
@@ -21,6 +21,9 @@ describe('PlatosTipicosController (e2e)', () => {
   };
 
   beforeEach(async () => {
+    jest.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
+    jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    jest.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     app = await createApp();
   });
 
@@ -33,6 +36,7 @@ describe('PlatosTipicosController (e2e)', () => {
     }
 
     await app.close();
+    jest.restoreAllMocks();
   });
 
   const platoPayload = (nombre: string) => ({
@@ -72,6 +76,20 @@ describe('PlatosTipicosController (e2e)', () => {
     expect(body.metadata?.timestampISO).toMatch(isoRegex);
   };
 
+  const expectLogContaining = (
+    method: 'log' | 'warn' | 'error',
+    expected: Record<string, unknown>,
+  ): void => {
+    const spy = jest.spyOn(Logger.prototype, method);
+    expect(spy).toHaveBeenCalledWith(expect.any(String));
+    const parsedLogs = spy.mock.calls
+      .filter(([message]) => (message as string).startsWith('{'))
+      .map(([message]) => JSON.parse(message as string));
+    expect(parsedLogs).toEqual(
+      expect.arrayContaining([expect.objectContaining(expected)]),
+    );
+  };
+
   it('permite health sin API Key', async () => {
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .get('/health')
@@ -82,6 +100,12 @@ describe('PlatosTipicosController (e2e)', () => {
     await supertest(app.getHttpServer() as Parameters<typeof supertest>[0])
       .get('/platos-tipicos')
       .expect(401);
+
+    expectLogContaining('warn', {
+      level: 'WARN',
+      action: 'API_KEY_VALIDATION',
+      route: '/platos-tipicos',
+    });
   });
 
   it('devuelve 401 si API Key es incorrecta', async () => {
@@ -111,6 +135,12 @@ describe('PlatosTipicosController (e2e)', () => {
       },
     });
     expectMetadata(response.body);
+    expectLogContaining('log', {
+      level: 'INFO',
+      action: 'CREATE',
+      route: '/platos-tipicos',
+      platoId: response.body.data.id,
+    });
   });
 
   it('lista platos tipicos', async () => {
@@ -254,6 +284,12 @@ describe('PlatosTipicosController (e2e)', () => {
         precio: -1,
       })
       .expect(400);
+
+    expectLogContaining('warn', {
+      level: 'WARN',
+      action: 'VALIDATION',
+      route: '/platos-tipicos',
+    });
   });
 
   it('rechaza imagenUrl invalida', async () => {
