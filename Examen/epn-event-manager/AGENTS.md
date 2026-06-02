@@ -1,32 +1,50 @@
 ﻿# AGENTS.md
 
-Reglas de trabajo para Codex en este proyecto.
+## Reglas generales
 
-## Alcance del proyecto
+- El proyecto está ubicado en Examen/epn-event-manager.
+- Los cambios se realizan en la rama desarrollo.
+- Trabajar con la estructura actual del proyecto NestJS.
+- No crear carpeta backend, porque este proyecto ya es el backend.
+- El CRUD de platos típicos ecuatorianos debe crearse dentro de src/modules/platos-tipicos.
+- El CRUD debe usar persistencia en SQLite, no arreglos en memoria.
+- La base de datos debe guardarse en db/.
+- No subir node_modules.
+- No subir .env.
+- Sí subir .env.example.
+- Después de cada fase se debe actualizar la documentación correspondiente.
+- Después de cada fase se debe hacer commit en la rama desarrollo.
 
-- Trabajar solo dentro de `Examen/epn-event-manager`.
-- No modificar archivos fuera de `Examen/epn-event-manager`.
-- No crear, editar ni eliminar archivos externos al proyecto.
-- No agregar ni versionar `node_modules`.
-- No agregar dependencias sin una fase o solicitud explicita.
+## Recurso principal
 
-## Metodologia obligatoria
+PlatoTipico.
 
-- Usar TDD en cada mantenimiento del sistema.
-- No implementar funcionalidades sin pruebas previas.
-- Para cada cambio funcional, primero crear o actualizar pruebas que fallen en fase Red.
-- Luego implementar el minimo codigo necesario para pasar a fase Green.
-- Finalmente refactorizar solo si mejora claridad sin cambiar comportamiento.
+Campos oficiales:
 
-## Documentacion viva
+- id
+- nombre
+- descripcion
+- region
+- ingredientes
+- precio
+- imagenUrl
+- categoria
 
-- Actualizar `CONTEXTO_PROYECTO.md` al finalizar cada fase.
-- Actualizar `README.md` cuando cambien comandos, endpoints o forma de ejecucion.
-- Actualizar `PLAN_TDD.md` cuando cambien, se agreguen o se eliminen pruebas.
+## Metodología
 
-## Restricciones de implementacion
+Primero se construye el CRUD inicial persistente.
 
-- Mantener codigo simple y entendible para examen.
-- Evitar abstracciones innecesarias.
-- Priorizar nombres claros y estructura facil de revisar.
-- No crear CRUD, interfaz web ni GitHub Actions hasta que la fase correspondiente lo solicite.
+Después se aplica el examen de mantenimiento:
+
+- diagnóstico de deuda técnica
+- TDD
+- mantenimiento correctivo
+- mantenimiento adaptativo
+- mantenimiento perfectivo
+- mantenimiento preventivo
+- API Key
+- logs
+- Swagger
+- frontend
+- GitHub Actions
+- documentación final

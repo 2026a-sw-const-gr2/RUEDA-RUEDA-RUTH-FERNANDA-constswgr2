@@ -1,70 +1,79 @@
-﻿# Plan TDD
+﻿# PLAN TDD
 
-## Metodologia
+## Metodología
 
-El proyecto usara TDD para desarrollar el mantenimiento de platos tipicos ecuatorianos.
+Cada mantenimiento debe seguir:
 
-## Ciclo Red, Green, Refactor
+1. RED: crear prueba que falle.
+2. GREEN: implementar código mínimo.
+3. REFACTOR: mejorar sin cambiar comportamiento.
 
-- Red: escribir una prueba automatizada antes de implementar la funcionalidad. La prueba debe fallar porque el comportamiento aun no existe.
-- Green: implementar el minimo codigo necesario para que la prueba pase.
-- Refactor: mejorar nombres, estructura o duplicacion manteniendo todas las pruebas en verde.
+## Pruebas del CRUD inicial
 
-## Pruebas esperadas para PlatoTipico
+- Crear plato típico.
+- Listar platos típicos.
+- Consultar plato típico existente.
+- Consultar plato típico inexistente.
+- Actualizar plato típico existente.
+- Actualizar plato típico inexistente.
+- Eliminar plato típico existente.
+- Eliminar plato típico inexistente.
+- Verificar persistencia SQLite después de reiniciar.
 
-### Crear plato tipico
+## Pruebas de mantenimiento correctivo
 
-- Debe crear un `PlatoTipico` con `nombre`, `descripcion`, `region`, `ingredientes`, `precio`, `imagenUrl` y `categoria` validos.
-- Debe asignar o devolver un `id` para el plato creado.
-- Debe responder correctamente al endpoint `POST /platos-tipicos`.
+- DELETE elimina realmente en SQLite.
+- DELETE con id inexistente devuelve error controlado.
+- No se retorna éxito falso.
 
-### Listar platos tipicos
+## Pruebas de mantenimiento adaptativo
 
-- Debe listar todos los platos tipicos registrados.
-- Debe devolver una lista vacia cuando no existan platos registrados.
-- Debe responder correctamente al endpoint `GET /platos-tipicos`.
+- CREATE genera metadata.
+- UPDATE genera metadata.
+- DELETE genera metadata.
+- QUERY genera metadata.
+- timestampISO tiene formato ISO 8601.
 
-### Consultar plato tipico por id
+## Pruebas de mantenimiento perfectivo
 
-- Debe devolver un plato tipico existente por su `id`.
-- Debe manejar el caso de un `id` inexistente.
-- Debe responder correctamente al endpoint `GET /platos-tipicos/:id`.
+- GET /platos-tipicos/stats devuelve totalPlatos.
+- Calcula precioPromedio.
+- Calcula precioMinimo.
+- Calcula precioMaximo.
+- Agrupa platosPorRegion.
+- Agrupa platosPorCategoria.
 
-### Actualizar plato tipico
+## Pruebas de mantenimiento preventivo
 
-- Debe actualizar parcialmente los campos permitidos de un plato tipico existente.
-- Debe conservar los campos que no se envien en la actualizacion.
-- Debe manejar el caso de actualizar un `id` inexistente.
-- Debe responder correctamente al endpoint `PATCH /platos-tipicos/:id`.
+- nombre vacío falla.
+- descripcion vacía falla.
+- region vacía falla.
+- ingredientes vacío falla.
+- categoria vacía falla.
+- precio negativo falla.
+- imagenUrl inválida falla.
+- texto con <script> falla.
+- texto con SELECT, DROP, INSERT o -- falla.
+- textos demasiado largos fallan.
 
-### Eliminar plato tipico
+## Pruebas de API Key
 
-- Debe eliminar un plato tipico existente.
-- Debe evitar que un plato eliminado aparezca en la lista posterior.
-- Debe manejar el caso de eliminar un `id` inexistente.
-- Debe responder correctamente al endpoint `DELETE /platos-tipicos/:id`.
+- Sin X-FIS-EPN-KEY devuelve 401.
+- API Key incorrecta devuelve 401.
+- API Key correcta permite acceder.
 
-## Pruebas para validaciones
+## Checklist manual de frontend
 
-- Debe rechazar un plato tipico sin `nombre`.
-- Debe rechazar un plato tipico sin `descripcion`.
-- Debe rechazar un plato tipico sin `region`.
-- Debe rechazar un plato tipico sin `ingredientes`.
-- Debe rechazar un plato tipico con `precio` vacio, negativo o no numerico.
-- Debe validar que `imagenUrl` tenga formato de URL cuando se envie.
-- Debe rechazar una `categoria` vacia.
-- Debe validar datos invalidos tambien en actualizaciones parciales.
-
-## Pruebas o validacion manual para interfaz web
-
-Cuando exista la interfaz web, se debera validar como minimo:
-
-- La pantalla permite listar platos tipicos ecuatorianos.
-- El formulario permite crear un plato tipico con todos los campos requeridos.
-- La interfaz muestra mensajes de validacion cuando faltan campos o el precio es invalido.
-- La pantalla permite consultar o visualizar el detalle de un plato tipico.
-- La pantalla permite actualizar datos de un plato tipico.
-- La pantalla permite eliminar un plato tipico y actualizar la lista.
-- La interfaz consume los endpoints esperados del backend.
-
-Estas validaciones se automatizaran si la fase correspondiente lo permite; de lo contrario, quedaran registradas como validacion manual.
+- Lista platos típicos.
+- Muestra imagen.
+- Muestra nombre.
+- Muestra descripción.
+- Muestra región.
+- Muestra ingredientes.
+- Muestra precio.
+- Muestra categoría.
+- Permite crear.
+- Permite ver.
+- Permite editar.
+- Permite eliminar.
+- Muestra estadísticas.

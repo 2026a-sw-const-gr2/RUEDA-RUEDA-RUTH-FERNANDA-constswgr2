@@ -1,43 +1,128 @@
-﻿# Contexto del Proyecto
+﻿# CONTEXTO DEL PROYECTO
 
-## Ubicacion
+## Proyecto
 
-El proyecto se encuentra en:
+EPN Event Manager - Examen de Mantenimiento de Software.
 
-`Examen/epn-event-manager`
+## Ubicación
 
-## Objetivo general
+Examen/epn-event-manager
 
-Construir un sistema de examen para el mantenimiento de platos tipicos ecuatorianos usando Node.js, metodologia TDD, interfaz web y GitHub Actions en fases posteriores.
+## Rama de trabajo
+
+desarrollo
+
+## Tema funcional
+
+CRUD de platos típicos ecuatorianos.
 
 ## Recurso principal
 
-El recurso principal del sistema es `PlatoTipico`.
+PlatoTipico.
 
-## Campos de PlatoTipico
+## Campos oficiales
 
-- `id`
-- `nombre`
-- `descripcion`
-- `region`
-- `ingredientes`
-- `precio`
-- `imagenUrl`
-- `categoria`
+- id
+- nombre
+- descripcion
+- region
+- ingredientes
+- precio
+- imagenUrl
+- categoria
 
-## Registro de fases
+## Objetivo general
 
-| Fase | Descripcion | Estado |
-| --- | --- | --- |
-| Fase 0 | Crear documentacion base del proyecto | Completada |
-| Fase 1 | Preparar pruebas iniciales para platos tipicos | Pendiente |
-| Fase 2 | Implementar CRUD de platos tipicos con TDD | Pendiente |
-| Fase 3 | Crear interfaz web | Pendiente |
-| Fase 4 | Configurar GitHub Actions | Pendiente |
-| Fase 5 | Ajustes finales y documentacion de cierre | Pendiente |
+Primero crear un CRUD inicial persistente usando SQLite.
 
-## Estado inicial del proyecto
+Después aplicar mantenimiento de software sobre ese CRUD:
 
-El proyecto inicia sin mantenimiento de platos tipicos implementado. Actualmente no se ha creado el CRUD de `PlatoTipico`, no existe interfaz web especifica para el recurso, no se han configurado GitHub Actions para el examen y no se han definido pruebas propias para el mantenimiento de platos tipicos.
+- correctivo
+- adaptativo
+- perfectivo
+- preventivo
 
-La Fase 0 deja creada la documentacion base para orientar el desarrollo y registrar las reglas de trabajo con TDD.
+## Estructura actual
+
+- db/: base de datos SQLite.
+- src/: código fuente NestJS.
+- src/database/: configuración de base de datos.
+- src/modules/: módulos funcionales.
+- test/: pruebas e2e.
+- README.md: documentación de uso.
+- PLAN_TDD.md: planificación de pruebas.
+- AGENTS.md: reglas para Codex.
+
+## Fases del proyecto
+
+### Fase 0 - Actualizar documentación base
+
+Estado: pendiente
+
+### Fase 1 - Revisar estructura real
+
+Estado: pendiente
+
+### Fase 2 - Crear CRUD inicial persistente con SQLite
+
+Estado: pendiente
+
+### Fase 3 - Probar CRUD inicial y persistencia
+
+Estado: pendiente
+
+### Fase 4 - Diagnóstico de deuda técnica
+
+Estado: pendiente
+
+### Fase 5 - TDD base del CRUD
+
+Estado: pendiente
+
+### Fase 6 - Mantenimiento correctivo
+
+Estado: pendiente
+
+### Fase 7 - Mantenimiento adaptativo
+
+Estado: pendiente
+
+### Fase 8 - Mantenimiento perfectivo
+
+Estado: pendiente
+
+### Fase 9 - Mantenimiento preventivo
+
+Estado: pendiente
+
+### Fase 10 - Seguridad por API Key
+
+Estado: pendiente
+
+### Fase 11 - Logs y trazabilidad
+
+Estado: pendiente
+
+### Fase 12 - Swagger / OpenAPI
+
+Estado: pendiente
+
+### Fase 13 - Frontend / hub visual
+
+Estado: pendiente
+
+### Fase 14 - GitHub Actions
+
+Estado: pendiente
+
+### Fase 15 - Pruebas manuales o Postman
+
+Estado: pendiente
+
+### Fase 16 - Documentación final
+
+Estado: pendiente
+
+### Fase 17 - Revisión final
+
+Estado: pendiente
